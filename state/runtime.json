@@ -10,59 +10,59 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-26T07:14:46-03:00"
+    "updated_at": "2026-09-26T12:16:42-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 1,
-  "commits_today": 2,
+  "tasks_today": 2,
+  "commits_today": 4,
   "failures_today": 1,
   "agents": {
     "requirements": {
       "status": "passed",
-      "detail": "O próximo projeto da fila é brazil-road-safety; é obrigatório um repositório público em DatalabMp."
+      "detail": "A próxima etapa exige definir formalmente fonte, granularidade, janela temporal, critérios de qualidade e gate antes da ingestão analítica."
     },
     "architecture": {
       "status": "passed",
-      "detail": "O projeto deve permanecer isolado em seu próprio repositório DatalabMp e registrado pelo controlador."
+      "detail": "Foi definido o fluxo raw → processed → outputs, preservando dados brutos e exigindo transformações reproduzíveis por código."
     },
     "data_engineering": {
       "status": "passed",
-      "detail": "A PRF é a fonte pública registrada; nenhuma ingestão foi realizada antes da criação segura do repositório."
+      "detail": "O contrato registra a PRF como fonte primária, ocorrência como granularidade inicial e dez verificações mínimas de qualidade antes da liberação estatística."
     },
     "statistics": {
       "status": "passed",
-      "detail": "Nenhuma afirmação estatística ou modelagem foi realizada antes da validação dos dados."
+      "detail": "O contrato exige unidade de análise, período, filtros e denominadores explícitos e proíbe inferência causal sem desenho apropriado."
     },
     "modeling": {
       "status": "not_applicable",
-      "detail": "A modelagem ainda não é justificável antes da disponibilidade e validação do conjunto de dados."
+      "detail": "Modelagem continua não justificada antes da ingestão e validação do conjunto de dados."
     },
     "visualization": {
       "status": "not_applicable",
-      "detail": "O desenvolvimento analítico do dashboard foi adiado até existirem resultados validados."
+      "detail": "Resultados analíticos continuam bloqueados até aprovação do gate automático de qualidade."
     },
     "qa": {
       "status": "passed",
-      "detail": "Escopo e custo zero preservados; criação inicial do projeto e integração contínua concluídas com sucesso."
+      "detail": "A tarefa foi limitada a documentação verificável da fonte oficial; nenhuma estatística ou dado não validado foi publicado."
     },
     "security": {
       "status": "passed",
-      "detail": "O token da GitHub App funcionou somente em DatalabMp; nenhum segredo, cobrança, membro, propriedade, exclusão, transferência ou repositório fora do escopo foi exposto."
+      "detail": "Somente DatalabMp/brazil-road-safety e DatalabMp/datalab-controller foram alterados; nenhum segredo, billing, membro ou recurso externo ao escopo foi acessado."
     },
     "reviewer": {
       "status": "passed",
-      "detail": "O provisionamento da fábrica de projetos foi validado de ponta a ponta, com escopo público em DatalabMp e custo externo de IA/API igual a USD 0,00."
+      "detail": "A revisão independente confirmou granularidade coerente, cautela na quebra BR-Brasil/BAT em 2016/2017 e tratamento do ano corrente como potencialmente parcial."
     },
     "executor": {
       "status": "passed",
-      "detail": "DatalabMp/brazil-road-safety foi criado e inicializado; manifesto, integração contínua, testes, documentação e estrutura do dashboard estão presentes e os fluxos iniciais foram aprovados."
+      "detail": "Criado docs/CONTRATO_DADOS.md em brazil-road-safety com fonte oficial, granularidade, regras de qualidade, camadas, limitações e gate para a próxima etapa."
     }
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "initialized",
-      "progress_percent": 5,
+      "status": "data_contract_defined",
+      "progress_percent": 10,
       "blocker": null
     }
   },
@@ -93,6 +93,11 @@
       "timestamp": "2026-09-26T13:47:01+00:00",
       "type": "project_factory_validated",
       "detail": "Autenticação da GitHub App dedicada, criação do repositório, manifesto gerenciado, integração contínua inicial e publicação do dashboard foram validados com sucesso para DatalabMp/brazil-road-safety."
+    },
+    {
+      "timestamp": "2026-09-26T12:16:42-03:00",
+      "type": "data_contract_defined",
+      "detail": "Contrato de dados da PRF documentado com granularidade por ocorrência, quebra histórica BR-Brasil/BAT, regras mínimas de qualidade, limitações estatísticas e gate obrigatório antes da ingestão analítica. Custo externo de IA/API: USD 0,00."
     }
   ]
 }
