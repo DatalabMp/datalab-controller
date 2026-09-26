@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
@@ -23,7 +23,7 @@ def build_status_snapshot() -> dict:
     agents = _load_yaml("config/agents.yaml").get("agents", {})
 
     return {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "generated_at": datetime.now(UTC).isoformat(),
         "organization": settings["organization"],
         "controller_repository": settings["controller_repository"],
         "external_ai_cost_usd": 0.0,
