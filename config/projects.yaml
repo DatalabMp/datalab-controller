@@ -1,37 +1,37 @@
 projects:
-  - slug: brazil-road-safety
-    title: Brazil Road Safety Analytics
-    source: PRF
-    status: queued
-    priority: 1
-    dashboard: github-pages
-  - slug: brazil-economic-monitor
-    title: Brazil Economic Monitor
-    source: Banco Central do Brasil
-    status: queued
-    priority: 2
-    dashboard: github-pages
-  - slug: enem-analytics
-    title: ENEM Analytics
-    source: INEP
-    status: queued
-    priority: 3
-    dashboard: github-pages
-  - slug: brazil-labor-observatory
-    title: Brazil Population & Labor Observatory
-    source: IBGE
-    status: queued
-    priority: 4
-    dashboard: github-pages
-  - slug: sus-health-analytics
-    title: SUS Health Analytics
-    source: DATASUS
-    status: queued
-    priority: 5
-    dashboard: github-pages
-  - slug: brazil-agriculture-analytics
-    title: Brazil Agriculture Analytics
-    source: IBGE/PAM
-    status: queued
-    priority: 6
-    dashboard: github-pages
+- slug: brazil-road-safety
+  title: Brazil Road Safety Analytics
+  source: PRF
+  status: active
+  priority: 1
+  dashboard: github-pages
+- slug: brazil-economic-monitor
+  title: Brazil Economic Monitor
+  source: Banco Central do Brasil
+  status: queued
+  priority: 2
+  dashboard: github-pages
+- slug: enem-analytics
+  title: ENEM Analytics
+  source: INEP
+  status: queued
+  priority: 3
+  dashboard: github-pages
+- slug: brazil-labor-observatory
+  title: Brazil Population & Labor Observatory
+  source: IBGE
+  status: queued
+  priority: 4
+  dashboard: github-pages
+- slug: sus-health-analytics
+  title: SUS Health Analytics
+  source: DATASUS
+  status: queued
+  priority: 5
+  dashboard: github-pages
+- slug: brazil-agriculture-analytics
+  title: Brazil Agriculture Analytics
+  source: IBGE/PAM
+  status: queued
+  priority: 6
+  dashboard: github-pages
