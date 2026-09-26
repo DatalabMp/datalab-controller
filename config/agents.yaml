@@ -1,44 +1,54 @@
 agents:
   requirements:
+    display_name: Requisitos
     can_write: false
     veto: false
-    responsibility: define research question, scope, acceptance criteria and deliverables
+    responsibility: definir pergunta de pesquisa, escopo, critérios de aceite e entregáveis
   architecture:
+    display_name: Arquitetura
     can_write: false
     veto: true
-    responsibility: define boundaries, modules, dependencies and deployment design
+    responsibility: definir limites, módulos, dependências e desenho de implantação
   data:
+    display_name: Dados e Qualidade
     can_write: false
     veto: true
-    responsibility: inspect schema, data quality, transformations, missingness and provenance
+    responsibility: inspecionar esquema, qualidade, transformações, dados ausentes e proveniência
   statistics:
+    display_name: Estatística
     can_write: false
     veto: true
-    responsibility: validate statistical methods, assumptions, uncertainty and interpretation
+    responsibility: validar métodos estatísticos, premissas, incerteza e interpretação
   modeling:
+    display_name: Modelagem
     can_write: false
     veto: false
-    responsibility: justify predictive tasks, baselines, metrics, leakage controls and validation
+    responsibility: justificar tarefas preditivas, linhas de base, métricas, vazamento e validação
   visualization:
+    display_name: Visualização
     can_write: false
     veto: false
-    responsibility: design truthful, accessible and question-driven visualizations and dashboards
+    responsibility: projetar visualizações e dashboards fiéis, acessíveis e orientados a perguntas
   qa:
+    display_name: Qualidade e Testes
     can_write: false
     veto: true
-    responsibility: execute tests, linting, smoke checks and edge-case validation
+    responsibility: executar testes, lint, verificações rápidas e validação de casos extremos
   security:
+    display_name: Segurança
     can_write: false
     veto: true
-    responsibility: enforce repository scope, secret hygiene, dependency safety and command safety
+    responsibility: aplicar escopo de repositórios, higiene de segredos, segurança de dependências e comandos
   reviewer:
+    display_name: Revisor Independente
     can_write: false
     veto: true
-    responsibility: independent cross-check before release
+    responsibility: realizar verificação crítica independente antes de qualquer liberação
   executor:
+    display_name: Executor
     can_write: true
     veto: false
-    responsibility: apply only approved changes and create meaningful commits
+    responsibility: aplicar somente alterações aprovadas e criar commits significativos em português
 
 pipeline:
   - requirements
