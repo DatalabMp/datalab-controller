@@ -1,61 +1,68 @@
-# DataLab Controller
+# Controlador DataLab
 
-Control plane for the **DatalabMp** autonomous data-science portfolio.
+Plano de controle do portfólio autônomo de Ciência de Dados da organização **DatalabMp**.
 
-## Mission
+## Missão
 
-Create and evolve public, reproducible data-science projects based on real datasets, with emphasis on interpretation, statistical rigor, dashboards, testing, security and transparent monitoring.
+Criar e evoluir projetos públicos e reproduzíveis de Ciência de Dados baseados em dados reais, com ênfase em interpretação, rigor estatístico, dashboards, testes, segurança e monitoramento transparente.
 
-## Non-negotiable rules
+## Regras não negociáveis
 
-- Authorized GitHub owner: `DatalabMp` only.
-- Never modify repositories outside `DatalabMp`.
-- Specialist agents do not push code directly.
-- Only the Executor may write after required review gates pass.
-- No empty/artificial commits.
-- External AI/API budget is hard-capped at **USD 0.00**.
-- Paid-model fallback is forbidden.
-- If all free/local inference options are unavailable, the run pauses rather than spend money.
-- Analytical conclusions must distinguish association from causality and document limitations.
+- Proprietário GitHub autorizado: somente `DatalabMp`.
+- Nunca modificar repositórios fora de `DatalabMp`.
+- Agentes especialistas não enviam código diretamente.
+- Somente o Executor pode escrever após a aprovação dos controles obrigatórios.
+- Nenhum commit vazio, artificial ou sem significado.
+- Mensagens de commit devem ser escritas em português do Brasil.
+- O orçamento externo de IA/API é limitado rigidamente a **USD 0,00**.
+- Fallback para modelos pagos é proibido.
+- Se todas as opções gratuitas ou locais estiverem indisponíveis, a execução é pausada em vez de gerar custo.
+- Conclusões analíticas devem distinguir associação de causalidade e documentar limitações.
 
-## Specialist agents
+## Agentes especialistas
 
-1. Requirements
-2. Data Quality / Engineering
-3. Statistics
-4. Modeling
-5. Architecture
-6. Visualization / Dashboard
-7. QA / Testing
-8. Security
-9. Reviewer
-10. Executor (the only write-capable role)
+1. Requisitos
+2. Arquitetura
+3. Dados e Qualidade
+4. Estatística
+5. Modelagem
+6. Visualização
+7. Qualidade e Testes
+8. Segurança
+9. Revisor Independente
+10. Executor — único papel autorizado a escrever
 
-## Planned projects
+## Projetos planejados
 
-- Brazil Road Safety Analytics — PRF
-- Brazil Economic Monitor — Banco Central do Brasil
-- ENEM Analytics — INEP
-- Brazil Population & Labor Observatory — IBGE
-- SUS Health Analytics — DATASUS
-- Brazil Agriculture Analytics — IBGE/PAM
+- Análise de Segurança Viária no Brasil — PRF
+- Monitor Econômico do Brasil — Banco Central do Brasil
+- Análise do ENEM — INEP
+- Observatório de População e Trabalho do Brasil — IBGE
+- Análise de Saúde do SUS — DATASUS
+- Análise da Agricultura Brasileira — IBGE/PAM
 
-## Monitoring
+## Monitoramento
 
-The Agent Operations Center is published through GitHub Pages and is rebuilt from controller state. It shows project progress, agent state, validation gates, failures, commits, provider state and confirmed external-model cost.
+A **Central de Operações e Orquestração** é publicada pelo GitHub Pages e reconstruída a partir do estado do controlador. Ela mostra progresso dos projetos, estado dos agentes, controles de validação, falhas, commits, agenda operacional, provedores, tokens quando reportados e custo externo confirmado.
 
-Expected URL: `https://datalabmp.github.io/datalab-controller/`
+Painel: `https://datalabmp.github.io/datalab-controller/`
 
-## Project Factory
+## Fábrica de Projetos
 
-The controller includes a guarded repository factory for the 72-hour project cadence. It is disabled until the dedicated GitHub App credentials are added as Actions secrets. See [`docs/PROJECT_FACTORY_SETUP.md`](docs/PROJECT_FACTORY_SETUP.md).
+O controlador possui uma fábrica protegida de repositórios para a cadência de novos projetos a cada 72 horas. A autenticação é feita por uma GitHub App dedicada instalada exclusivamente em `DatalabMp`.
 
-The factory can create only public repositories under `DatalabMp`, refuses automatic adoption of pre-existing repositories, initializes the DataLab manifest/CI/tests/Pages scaffold, and records the new project in controller state.
+A fábrica pode criar somente repositórios públicos dentro de `DatalabMp`, recusa adoção automática de repositórios preexistentes, inicializa manifesto DataLab, CI, testes, documentação e GitHub Pages, e registra o novo projeto no estado do controlador.
 
-## Status
+## Idioma operacional
 
-- Controller foundation: active
-- CI: passing
-- Operations Center: GitHub Pages deployment enabled
-- Project Factory code: prepared
-- Project Factory credentials: pending operator setup
+Todo conteúdo visível ao usuário, documentação operacional, eventos, nomes exibidos no dashboard e mensagens de commit devem ser escritos em **português do Brasil**. Identificadores técnicos internos podem permanecer em inglês quando sua alteração puder comprometer compatibilidade ou lógica existente.
+
+## Estado atual
+
+- Fundação do controlador: ativa
+- Integração contínua: operacional
+- Central de Operações: publicada no GitHub Pages
+- Fábrica de Projetos: operacional
+- GitHub App dedicada: operacional
+- Primeiro projeto gerenciado: `DatalabMp/brazil-road-safety`
+- Custo externo de IA/API permitido: USD 0,00
