@@ -7,6 +7,7 @@ on:
       - "docs/**"
       - "config/**"
       - "datalab/**"
+      - "state/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -22,6 +23,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages_status: ${{ steps.pages.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,16 +41,24 @@ jobs:
         run: python -m datalab.orchestrator > docs/monitor.json
 
       - name: Configure Pages
+        id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
+      - name: Report Pages setup requirement
+        if: steps.pages.outcome != 'success'
+        run: echo "GitHub Pages is not enabled yet. Enable Pages with GitHub Actions once in repository Settings > Pages."
+
       - name: Upload Pages artifact
+        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
   deploy:
+    if: needs.build.outputs.pages_status == 'success'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -1,4 +1,4 @@
-"""Controller entry point. Initial version is intentionally read-only."""
+"""Controller entry point. Initial version remains write-safe and observable."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+
+from datalab.state import load_runtime
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,6 +23,23 @@ def build_status_snapshot() -> dict:
     settings = _load_yaml("config/settings.yaml")
     projects = _load_yaml("config/projects.yaml").get("projects", [])
     agents = _load_yaml("config/agents.yaml").get("agents", {})
+    runtime = load_runtime()
+
+    runtime_agents = runtime.get("agents", {})
+    progress = runtime.get("project_progress", {})
+
+    project_rows = []
+    for project in projects:
+        live = progress.get(project["slug"], {})
+        project_rows.append(
+            {
+                "slug": project["slug"],
+                "title": project["title"],
+                "status": live.get("status", project["status"]),
+                "priority": project["priority"],
+                "progress": int(live.get("progress", 0)),
+            }
+        )
 
     return {
         "generated_at": datetime.now(UTC).isoformat(),
@@ -28,23 +47,25 @@ def build_status_snapshot() -> dict:
         "controller_repository": settings["controller_repository"],
         "external_ai_cost_usd": 0.0,
         "provider_mode": settings["provider_policy"]["default_mode"],
-        "projects": [
-            {
-                "slug": project["slug"],
-                "title": project["title"],
-                "status": project["status"],
-                "priority": project["priority"],
-            }
-            for project in projects
-        ],
+        "metrics": {
+            "tasks_today": int(runtime.get("tasks_today", 0)),
+            "commits_today": int(runtime.get("commits_today", 0)),
+            "failures_today": int(runtime.get("failures_today", 0)),
+        },
+        "daily_plan": runtime.get("daily_plan", {}),
+        "active_project": runtime.get("active_project"),
+        "last_project_started_at": runtime.get("last_project_started_at"),
+        "projects": project_rows,
         "agents": {
             name: {
-                "state": "idle",
+                "state": runtime_agents.get(name, {}).get("state", "idle"),
                 "can_write": bool(spec["can_write"]),
                 "veto": bool(spec["veto"]),
             }
             for name, spec in agents.items()
         },
+        "providers": runtime.get("providers", []),
+        "recent_events": runtime.get("recent_events", []),
         "safety": {
             "allowed_owner": settings["repository_policy"]["allowed_owner"],
             "paid_models_allowed": settings["execution"]["allow_paid_models"],

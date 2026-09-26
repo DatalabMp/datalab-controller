@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "date": null,
+  "daily_plan": {
+    "date": null,
+    "target_slots": 0,
+    "hours": []
+  },
+  "active_project": null,
+  "last_project_started_at": null,
+  "tasks_today": 0,
+  "commits_today": 0,
+  "failures_today": 0,
+  "agents": {},
+  "project_progress": {},
+  "providers": [],
+  "recent_events": []
+}
