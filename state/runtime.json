@@ -20,43 +20,43 @@
   "agents": {
     "requirements": {
       "status": "passed",
-      "detail": "Next queued project is brazil-road-safety; public DatalabMp repository required."
+      "detail": "O próximo projeto da fila é brazil-road-safety; é obrigatório um repositório público em DatalabMp."
     },
     "architecture": {
       "status": "passed",
-      "detail": "Project must remain isolated in its own DatalabMp repository and registered by controller."
+      "detail": "O projeto deve permanecer isolado em seu próprio repositório DatalabMp e registrado pelo controlador."
     },
     "data_engineering": {
       "status": "passed",
-      "detail": "PRF is the registered public data source; no dataset ingestion attempted before repository bootstrap."
+      "detail": "A PRF é a fonte pública registrada; nenhuma ingestão foi realizada antes da criação segura do repositório."
     },
     "statistics": {
       "status": "passed",
-      "detail": "No statistical claims or modeling performed before data validation."
+      "detail": "Nenhuma afirmação estatística ou modelagem foi realizada antes da validação dos dados."
     },
     "modeling": {
       "status": "not_applicable",
-      "detail": "Modeling is not justified before repository and validated dataset exist."
+      "detail": "A modelagem ainda não é justificável antes da disponibilidade e validação do conjunto de dados."
     },
     "visualization": {
       "status": "not_applicable",
-      "detail": "Dashboard work deferred until validated analytical outputs exist."
+      "detail": "O desenvolvimento analítico do dashboard foi adiado até existirem resultados validados."
     },
     "qa": {
       "status": "passed",
-      "detail": "Scope and zero-cost constraints preserved; project factory bootstrap and initial CI completed successfully."
+      "detail": "Escopo e custo zero preservados; criação inicial do projeto e integração contínua concluídas com sucesso."
     },
     "security": {
       "status": "passed",
-      "detail": "GitHub App installation token worked only for DatalabMp; no secrets, billing, membership, ownership, deletion, transfer, or out-of-scope repository operations were exposed."
+      "detail": "O token da GitHub App funcionou somente em DatalabMp; nenhum segredo, cobrança, membro, propriedade, exclusão, transferência ou repositório fora do escopo foi exposto."
     },
     "reviewer": {
       "status": "passed",
-      "detail": "Project factory provisioning path was validated end-to-end with public DatalabMp scope and zero external AI/API cost."
+      "detail": "O provisionamento da fábrica de projetos foi validado de ponta a ponta, com escopo público em DatalabMp e custo externo de IA/API igual a USD 0,00."
     },
     "executor": {
       "status": "passed",
-      "detail": "Created and initialized DatalabMp/brazil-road-safety; manifest, CI, tests, docs and dashboard scaffold are present and initial workflows passed."
+      "detail": "DatalabMp/brazil-road-safety foi criado e inicializado; manifesto, integração contínua, testes, documentação e estrutura do dashboard estão presentes e os fluxos iniciais foram aprovados."
     }
   },
   "project_progress": {
@@ -72,27 +72,27 @@
     {
       "timestamp": "2026-09-26T03:13:54-03:00",
       "type": "daily_plan_initialized",
-      "detail": "Randomized 14 meaningful work slots for 2026-09-26; current hour 03 is active."
+      "detail": "Plano diário criado com 14 horários de trabalho significativo para 26/09/2026; a hora 03 foi marcada como ativa."
     },
     {
       "timestamp": "2026-09-26T07:14:46-03:00",
       "type": "control_check",
-      "detail": "No open [control] directive found; operator mode remains normal."
+      "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."
     },
     {
       "timestamp": "2026-09-26T07:14:46-03:00",
       "type": "project_start_blocked",
-      "detail": "Active work slot selected brazil-road-safety (priority 1), but available GitHub tooling could not yet create the required public DatalabMp repository. No workaround attempted. External AI/API cost remained USD 0.00."
+      "detail": "O horário ativo selecionou brazil-road-safety, prioridade 1, mas a ferramenta GitHub disponível ainda não podia criar o repositório público exigido em DatalabMp. Nenhum contorno fora do escopo foi tentado. O custo externo de IA/API permaneceu em USD 0,00."
     },
     {
       "timestamp": "2026-09-26T13:45:54.500567+00:00",
       "type": "project_initialized",
-      "detail": "Created public managed repository DatalabMp/brazil-road-safety; bootstrap files and quality gates initialized. External AI/API cost USD 0.00."
+      "detail": "O repositório público gerenciado DatalabMp/brazil-road-safety foi criado; estrutura inicial e controles de qualidade foram configurados. Custo externo de IA/API: USD 0,00."
     },
     {
       "timestamp": "2026-09-26T13:47:01+00:00",
       "type": "project_factory_validated",
-      "detail": "Dedicated GitHub App authentication, repository creation, managed manifest, initial CI and dashboard publication were validated successfully for DatalabMp/brazil-road-safety."
+      "detail": "Autenticação da GitHub App dedicada, criação do repositório, manifesto gerenciado, integração contínua inicial e publicação do dashboard foram validados com sucesso para DatalabMp/brazil-road-safety."
     }
   ]
 }
