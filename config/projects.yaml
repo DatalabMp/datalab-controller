@@ -1,36 +1,36 @@
 projects:
 - slug: brazil-road-safety
-  title: Brazil Road Safety Analytics
+  title: Análise de Segurança Viária no Brasil
   source: PRF
   status: active
   priority: 1
   dashboard: github-pages
 - slug: brazil-economic-monitor
-  title: Brazil Economic Monitor
+  title: Monitor Econômico do Brasil
   source: Banco Central do Brasil
   status: queued
   priority: 2
   dashboard: github-pages
 - slug: enem-analytics
-  title: ENEM Analytics
+  title: Análise do ENEM
   source: INEP
   status: queued
   priority: 3
   dashboard: github-pages
 - slug: brazil-labor-observatory
-  title: Brazil Population & Labor Observatory
+  title: Observatório de População e Trabalho do Brasil
   source: IBGE
   status: queued
   priority: 4
   dashboard: github-pages
 - slug: sus-health-analytics
-  title: SUS Health Analytics
+  title: Análise de Saúde do SUS
   source: DATASUS
   status: queued
   priority: 5
   dashboard: github-pages
 - slug: brazil-agriculture-analytics
-  title: Brazil Agriculture Analytics
+  title: Análise da Agricultura Brasileira
   source: IBGE/PAM
   status: queued
   priority: 6
