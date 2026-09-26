@@ -1,4 +1,4 @@
-"""Safe factory for new managed public DataLab repositories."""
+"""Fábrica segura para novos repositórios públicos gerenciados pelo DataLab."""
 
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ API_VERSION = "2026-03-10"
 
 
 class FactoryBlocked(RuntimeError):
-    """Raised when repository creation cannot proceed safely."""
+    """Indica que a criação do repositório não pode prosseguir com segurança."""
 
 
 @dataclass(frozen=True)
@@ -69,7 +69,7 @@ def repository_payload(project: ProjectSpec) -> dict:
     assert_owner(f"{AUTHORIZED_OWNER}/{project.slug}")
     return {
         "name": project.slug,
-        "description": f"{project.title} — reproducible DataLab project using {project.source}",
+        "description": f"{project.title} — projeto DataLab reproduzível com dados de {project.source}",
         "private": False,
         "has_issues": True,
         "has_projects": True,
@@ -89,21 +89,23 @@ def scaffold_files(project: ProjectSpec, created_at: str) -> dict[str, str]:
         "source": project.source,
         "dashboard": project.dashboard,
         "created_at": created_at,
+        "language": "pt-BR",
     }
 
     project_readme = f"""# {project.title}
 
-Managed DataLab project using **{project.source}** as its registered data source.
+Projeto gerenciado pelo DataLab usando **{project.source}** como fonte de dados registrada.
 
-## Analytical contract
+## Contrato analítico
 
-- Validate data quality before statistical conclusions.
-- Distinguish association from causality.
-- Document missing data, assumptions, uncertainty and limitations.
-- Prefer reproducible pipelines and tests over manual transformations.
-- Publish validated analytical outputs through GitHub Pages.
+- Validar a qualidade dos dados antes de qualquer conclusão estatística.
+- Distinguir associação de causalidade.
+- Documentar dados ausentes, premissas, incertezas e limitações.
+- Preferir pipelines reproduzíveis e testes a transformações manuais.
+- Publicar resultados analíticos validados por meio do GitHub Pages.
+- Escrever documentação, mensagens operacionais e commits em português do Brasil.
 
-The repository is managed by `DatalabMp/datalab-controller`.
+O repositório é gerenciado por `DatalabMp/datalab-controller`.
 """
 
     pyproject = f"""[project]
@@ -126,7 +128,7 @@ line-length = 100
 target-version = \"py312\"
 """
 
-    ci_workflow = """name: CI
+    ci_workflow = """name: Integração contínua
 
 on:
   push:
@@ -136,19 +138,24 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  validar:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v6
+      - name: Baixar repositório
+        uses: actions/checkout@v5
+      - name: Configurar Python
+        uses: actions/setup-python@v6
         with:
           python-version: \"3.12\"
-      - run: python -m pip install -e \".[dev]\"
-      - run: ruff check .
-      - run: pytest -q
+      - name: Instalar dependências
+        run: python -m pip install -e \".[dev]\"
+      - name: Validar estilo
+        run: ruff check .
+      - name: Executar testes
+        run: pytest -q
 """
 
-    pages_workflow = """name: Publish Dashboard
+    pages_workflow = """name: Publicar dashboard
 
 on:
   push:
@@ -168,31 +175,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  publicar:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - name: Baixar repositório
+        uses: actions/checkout@v5
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar artefato
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs
-      - id: deployment
+      - name: Publicar
+        id: deployment
         uses: actions/deploy-pages@v4
 """
 
     index_html = f"""<!doctype html>
-<html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>{project.title}</title></head>
-<body><main><h1>{project.title}</h1><p>Source: {project.source}</p><p>Dashboard scaffold initialized. Analytical content will be published only after data-quality and statistical review gates pass.</p></main></body></html>
+<html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>{project.title}</title></head>
+<body><main><h1>{project.title}</h1><p>Fonte: {project.source}</p><p>Estrutura inicial do dashboard criada. O conteúdo analítico será publicado somente após a aprovação dos controles de qualidade de dados e da revisão estatística.</p></main></body></html>
 """
 
     return {
         ".datalab/manifest.json": json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
         "PROJECT_PLAN.md": project_readme,
         "pyproject.toml": pyproject,
-        f"src/{package_name}/__init__.py": '"""Managed DataLab project package."""\n',
+        f"src/{package_name}/__init__.py": '"""Pacote do projeto gerenciado pelo DataLab."""\n',
         "tests/test_smoke.py": (
             "from pathlib import Path\n\n\n"
             "def test_managed_manifest_exists() -> None:\n"
@@ -207,7 +218,7 @@ jobs:
 class GitHubClient:
     def __init__(self, token: str, *, api_base: str = API_BASE) -> None:
         if not token:
-            raise FactoryBlocked("GH_TOKEN is required for repository creation.")
+            raise FactoryBlocked("GH_TOKEN é obrigatório para criar repositórios.")
         self.token = token
         self.api_base = api_base.rstrip("/")
 
@@ -229,7 +240,7 @@ class GitHubClient:
                 body = response.read().decode("utf-8")
         except HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")[:800]
-            raise FactoryBlocked(f"GitHub API {exc.code} for {path}: {detail}") from exc
+            raise FactoryBlocked(f"API do GitHub retornou {exc.code} para {path}: {detail}") from exc
         return json.loads(body) if body else {}
 
     def repository_exists(self, slug: str) -> bool:
@@ -250,7 +261,9 @@ class GitHubClient:
             if exc.code == 404:
                 return False
             detail = exc.read().decode("utf-8", errors="replace")[:800]
-            raise FactoryBlocked(f"GitHub API {exc.code} checking repository: {detail}") from exc
+            raise FactoryBlocked(
+                f"API do GitHub retornou {exc.code} ao verificar o repositório: {detail}"
+            ) from exc
 
     def create_repository(self, project: ProjectSpec) -> dict:
         return self._request("POST", f"/orgs/{AUTHORIZED_OWNER}/repos", repository_payload(project))
@@ -299,8 +312,9 @@ def _write_controller_state(project: ProjectSpec, started_at: str) -> None:
             "timestamp": started_at,
             "type": "project_initialized",
             "detail": (
-                f"Created public managed repository {AUTHORIZED_OWNER}/{project.slug}; "
-                "bootstrap files and quality gates initialized. External AI/API cost USD 0.00."
+                f"Repositório público gerenciado {AUTHORIZED_OWNER}/{project.slug} criado; "
+                "estrutura inicial e controles de qualidade configurados. "
+                "Custo externo de IA/API: USD 0,00."
             ),
         }
     )
@@ -312,7 +326,7 @@ def run(*, dry_run: bool = False, now: datetime | None = None) -> dict:
     projects = load_projects()
     project = select_next_queued(projects)
     if project is None:
-        return {"status": "idle", "reason": "no queued projects"}
+        return {"status": "idle", "reason": "não há projetos na fila"}
 
     state = json.loads((ROOT / "state/runtime.json").read_text(encoding="utf-8"))
     interval_days = int(settings["execution"]["new_project_interval_days"])
@@ -320,7 +334,7 @@ def run(*, dry_run: bool = False, now: datetime | None = None) -> dict:
     if not interval_elapsed(
         state.get("last_project_started_at"), interval_days=interval_days, now=current
     ):
-        return {"status": "idle", "reason": "project interval has not elapsed"}
+        return {"status": "idle", "reason": "o intervalo entre projetos ainda não foi concluído"}
 
     assert_owner(f"{AUTHORIZED_OWNER}/{project.slug}")
     if dry_run:
@@ -331,18 +345,18 @@ def run(*, dry_run: bool = False, now: datetime | None = None) -> dict:
         }
 
     if os.environ.get("DATALAB_FACTORY_ENABLED", "").lower() != "true":
-        raise FactoryBlocked("DATALAB_FACTORY_ENABLED must be exactly 'true'.")
+        raise FactoryBlocked("DATALAB_FACTORY_ENABLED deve ser exatamente 'true'.")
 
     client = GitHubClient(os.environ.get("GH_TOKEN", ""))
     if client.repository_exists(project.slug):
         raise FactoryBlocked(
-            f"Repository {AUTHORIZED_OWNER}/{project.slug} already exists; refusing automatic adoption."
+            f"O repositório {AUTHORIZED_OWNER}/{project.slug} já existe; adoção automática recusada."
         )
 
     started_at = current.isoformat()
     client.create_repository(project)
     for path, content in scaffold_files(project, started_at).items():
-        client.put_text_file(project.slug, path, content, f"chore: initialize {path}")
+        client.put_text_file(project.slug, path, content, f"manutenção: inicializa {path}")
 
     pages_status = "enabled"
     try:
