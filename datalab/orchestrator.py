@@ -98,7 +98,7 @@ def _next_project_eligible(last_started_at: str | None, interval_days: int) -> s
     if not last_started_at:
         return None
     try:
-        parsed = datetime.fromisoformat(last_started_at.replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(last_started_at)
     except ValueError:
         return None
     if parsed.tzinfo is None:
