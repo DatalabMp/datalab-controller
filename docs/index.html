@@ -1,128 +1,471 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DataLab Operations Center</title>
+  <meta name="theme-color" content="#07111f" />
+  <title>DataLab · Orchestration Center</title>
   <style>
-    :root { color-scheme: light dark; font-family: Inter, system-ui, sans-serif; }
-    body { margin: 0; background: Canvas; color: CanvasText; }
-    main { max-width: 1180px; margin: 0 auto; padding: 32px 20px 56px; }
-    h1, h2 { margin: 0 0 12px; }
-    .muted { opacity: .68; }
-    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 24px 0; }
-    .card { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; padding: 18px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
-    .metric { font-size: 1.75rem; font-weight: 700; margin-top: 6px; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid color-mix(in srgb, CanvasText 13%, transparent); }
-    .pill { display: inline-block; border: 1px solid currentColor; border-radius: 999px; padding: 2px 9px; font-size: .82rem; }
-    .section { margin-top: 34px; }
-    code { font-size: .92em; }
-    progress { width: 150px; max-width: 100%; }
-    .event { padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, CanvasText 13%, transparent); }
+    :root {
+      color-scheme: dark;
+      --bg: #07111f;
+      --panel: #0d1a2a;
+      --panel-2: #111f31;
+      --line: #203149;
+      --text: #edf5ff;
+      --muted: #8da2ba;
+      --cyan: #45d8c4;
+      --blue: #65a9ff;
+      --amber: #f3bd65;
+      --red: #ff7c87;
+      --green: #5fe09d;
+      --purple: #b79cff;
+      --radius: 18px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); min-height: 100%; }
+    body::before {
+      content: ""; position: absolute; inset: 0 0 auto 0; height: 340px; pointer-events: none;
+      background: radial-gradient(circle at 15% 0%, rgba(69,216,196,.13), transparent 34%), radial-gradient(circle at 80% 0%, rgba(101,169,255,.12), transparent 32%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a.action { font: inherit; }
+    .shell { position: relative; max-width: 1500px; margin: 0 auto; padding: 22px; }
+    .topbar { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; margin-bottom: 22px; }
+    .brand { display: flex; gap: 14px; align-items: center; min-width: 0; }
+    .mark { width: 46px; height: 46px; border-radius: 14px; border: 1px solid rgba(69,216,196,.4); display: grid; place-items: center; background: rgba(69,216,196,.08); color: var(--cyan); font-weight: 800; letter-spacing: -.06em; }
+    h1 { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); letter-spacing: -.035em; }
+    .subtitle { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 9px; }
+    .action, button.action { min-height: 42px; border: 1px solid var(--line); background: rgba(13,26,42,.82); color: var(--text); border-radius: 12px; padding: 9px 13px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; justify-content: center; }
+    .action:hover { border-color: #38506e; background: #122238; }
+    .action.primary { border-color: rgba(69,216,196,.45); background: rgba(69,216,196,.1); color: #bffff5; }
+    .statusbar { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center; color: var(--muted); font-size: .82rem; }
+    .live-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--green); box-shadow: 0 0 14px rgba(95,224,157,.8); }
+    .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 999px; padding: 5px 9px; font-size: .76rem; white-space: nowrap; }
+    .pill.passed, .pill.active, .pill.initialized { color: var(--green); border-color: rgba(95,224,157,.35); background: rgba(95,224,157,.07); }
+    .pill.running, .pill.reviewing, .pill.testing { color: var(--blue); border-color: rgba(101,169,255,.35); background: rgba(101,169,255,.07); }
+    .pill.blocked, .pill.failed, .pill.failure { color: var(--red); border-color: rgba(255,124,135,.35); background: rgba(255,124,135,.07); }
+    .pill.waiting, .pill.queued { color: var(--amber); border-color: rgba(243,189,101,.35); background: rgba(243,189,101,.07); }
+    .pill.not_applicable, .pill.idle, .pill.normal { color: var(--muted); }
+    .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 5px; margin: 0 0 20px; border: 1px solid var(--line); border-radius: 14px; background: rgba(8,19,33,.76); }
+    .tab { border: 0; background: transparent; color: var(--muted); border-radius: 10px; padding: 10px 13px; cursor: pointer; white-space: nowrap; }
+    .tab.active { color: var(--text); background: var(--panel-2); }
+    .view { display: none; }
+    .view.active { display: block; }
+    .kpis { display: grid; grid-template-columns: repeat(6, minmax(130px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .card { background: rgba(13,26,42,.9); border: 1px solid var(--line); border-radius: var(--radius); padding: 17px; min-width: 0; }
+    .kpi-label { color: var(--muted); font-size: .76rem; text-transform: uppercase; letter-spacing: .075em; }
+    .kpi-value { margin-top: 7px; font-size: clamp(1.35rem, 2.6vw, 2rem); font-weight: 750; letter-spacing: -.04em; }
+    .kpi-sub { color: var(--muted); font-size: .75rem; margin-top: 5px; }
+    .grid-2 { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, .8fr); gap: 16px; margin-bottom: 16px; }
+    .grid-even { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+    .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 15px; }
+    h2 { font-size: 1rem; margin: 0; letter-spacing: -.015em; }
+    h3 { font-size: .9rem; margin: 0; }
+    .muted { color: var(--muted); }
+    .tiny { font-size: .75rem; }
+    .progress-track { height: 8px; background: #081321; border-radius: 999px; overflow: hidden; border: 1px solid #182940; }
+    .progress-fill { height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--cyan), var(--blue)); transition: width .35s ease; }
+    .pipeline { display: grid; grid-template-columns: repeat(10, minmax(84px, 1fr)); gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+    .stage { position: relative; min-width: 84px; border: 1px solid var(--line); background: #0a1726; border-radius: 13px; padding: 12px 9px; text-align: center; }
+    .stage-num { width: 25px; height: 25px; margin: 0 auto 8px; border-radius: 50%; display: grid; place-items: center; font-size: .72rem; border: 1px solid var(--line); color: var(--muted); }
+    .stage.passed .stage-num { border-color: rgba(95,224,157,.45); color: var(--green); background: rgba(95,224,157,.07); }
+    .stage.blocked .stage-num, .stage.failed .stage-num { border-color: rgba(255,124,135,.45); color: var(--red); }
+    .stage-name { font-size: .72rem; overflow-wrap: anywhere; }
+    .stage-state { margin-top: 6px; color: var(--muted); font-size: .65rem; }
+    .project-list, .event-list, .provider-list { display: grid; gap: 10px; }
+    .project-row { display: grid; grid-template-columns: minmax(180px, 1.4fr) minmax(150px, 1fr) 90px; gap: 13px; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(32,49,73,.72); }
+    .project-row:last-child { border-bottom: 0; }
+    .project-title { font-weight: 650; }
+    .source { color: var(--muted); font-size: .76rem; margin-top: 3px; }
+    .project-progress { display: grid; gap: 6px; }
+    .project-percent { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .agent-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .agent { border: 1px solid var(--line); border-radius: 14px; padding: 13px; background: #0a1726; }
+    .agent-top { display: flex; justify-content: space-between; gap: 9px; align-items: center; }
+    .agent-detail { margin-top: 8px; color: var(--muted); font-size: .78rem; line-height: 1.45; }
+    .agent-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .schedule { display: grid; grid-template-columns: repeat(12, 1fr); gap: 5px; }
+    .hour { min-height: 35px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; color: #60758e; font-size: .68rem; }
+    .hour.on { color: #bffff5; border-color: rgba(69,216,196,.35); background: rgba(69,216,196,.08); }
+    .hour.now { outline: 1px solid var(--blue); outline-offset: 2px; }
+    .statline { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid rgba(32,49,73,.6); }
+    .statline:last-child { border-bottom: 0; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .event { display: grid; grid-template-columns: 150px 1fr; gap: 14px; position: relative; padding: 13px 0 13px 15px; border-left: 1px solid #28415d; }
+    .event::before { content: ""; position: absolute; left: -5px; top: 19px; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); }
+    .event-time { color: var(--muted); font-size: .74rem; }
+    .event-type { font-size: .78rem; color: var(--cyan); margin-bottom: 5px; }
+    .event-detail { line-height: 1.5; font-size: .84rem; }
+    .token-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+    .mini { padding: 12px; border-radius: 13px; background: #0a1726; border: 1px solid var(--line); }
+    .mini strong { display: block; margin-top: 5px; font-size: 1.2rem; }
+    .notice { padding: 13px 14px; border: 1px solid rgba(243,189,101,.3); background: rgba(243,189,101,.06); border-radius: 13px; color: #dbc79d; font-size: .8rem; line-height: 1.5; }
+    .control-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .control { border: 1px solid var(--line); background: #0a1726; border-radius: 14px; padding: 14px; min-height: 100px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; }
+    .control:hover { border-color: #38506e; }
+    .policy-list { display: grid; gap: 8px; }
+    .policy-item { display: flex; gap: 10px; align-items: flex-start; color: var(--muted); font-size: .82rem; }
+    .check { color: var(--green); }
+    .lock { color: var(--amber); }
+    .empty { color: var(--muted); padding: 18px 0; text-align: center; }
+    .error { color: var(--red); }
+    .footer { display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap; color: var(--muted); font-size: .72rem; padding: 18px 2px 4px; }
+    @media (max-width: 1080px) { .kpis { grid-template-columns: repeat(3, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      .shell { padding: 16px 12px 30px; }
+      .topbar { flex-direction: column; }
+      .actions { width: 100%; justify-content: flex-start; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .grid-even { grid-template-columns: 1fr; }
+      .agent-list { grid-template-columns: 1fr; }
+      .project-row { grid-template-columns: 1fr; gap: 7px; }
+      .project-percent { text-align: left; }
+      .token-grid { grid-template-columns: repeat(2, 1fr); }
+      .control-grid { grid-template-columns: 1fr; }
+      .event { grid-template-columns: 1fr; gap: 5px; }
+      .schedule { grid-template-columns: repeat(8, 1fr); }
+    }
+    @media (max-width: 390px) { .kpis { grid-template-columns: 1fr; } .schedule { grid-template-columns: repeat(6, 1fr); } }
   </style>
 </head>
 <body>
-<main>
-  <h1>DataLab Operations Center</h1>
-  <p class="muted">DatalabMp autonomous data-science control plane</p>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">DL</div>
+        <div>
+          <h1>DataLab Orchestration Center</h1>
+          <div class="subtitle">DatalabMp · autonomous data-science operations</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="action primary" id="refresh" type="button">↻ Atualizar</button>
+        <a class="action" id="controllerLink" href="https://github.com/DatalabMp/datalab-controller" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </div>
+    </header>
 
-  <div class="grid">
-    <div class="card"><div class="muted">Projects</div><div id="projectCount" class="metric">—</div></div>
-    <div class="card"><div class="muted">Agents</div><div id="agentCount" class="metric">—</div></div>
-    <div class="card"><div class="muted">Tasks today</div><div id="tasks" class="metric">0</div></div>
-    <div class="card"><div class="muted">Commits today</div><div id="commits" class="metric">0</div></div>
-    <div class="card"><div class="muted">Failures today</div><div id="failures" class="metric">0</div></div>
-    <div class="card"><div class="muted">External AI cost</div><div id="cost" class="metric">$0.00</div></div>
-    <div class="card"><div class="muted">Provider mode</div><div id="provider" class="metric">—</div></div>
-    <div class="card"><div class="muted">Operator mode</div><div id="operatorMode" class="metric">normal</div></div>
-  </div>
+    <div class="statusbar">
+      <span class="live-dot" id="healthDot"></span>
+      <span id="healthText">carregando snapshot</span>
+      <span>•</span><span id="snapshotAge">—</span>
+      <span>•</span><span>auto-refresh 60s</span>
+    </div>
 
-  <section class="section card">
-    <h2>Operator direction</h2>
-    <div id="operatorControl" class="muted">No control directive recorded.</div>
-  </section>
+    <nav class="tabs" aria-label="Dashboard sections">
+      <button class="tab active" data-view="overview" type="button">Visão geral</button>
+      <button class="tab" data-view="orchestration" type="button">Orquestração</button>
+      <button class="tab" data-view="ai" type="button">IA, tokens & custo</button>
+      <button class="tab" data-view="events" type="button">Eventos</button>
+      <button class="tab" data-view="controls" type="button">Controles</button>
+    </nav>
 
-  <section class="section card">
-    <h2>Safety boundary</h2>
-    <div id="safety">Loading…</div>
-  </section>
+    <section class="view active" id="view-overview">
+      <div class="kpis">
+        <div class="card"><div class="kpi-label">Projeto ativo</div><div class="kpi-value" id="activeProject">—</div><div class="kpi-sub" id="activeProgress">—</div></div>
+        <div class="card"><div class="kpi-label">Agentes aprovados</div><div class="kpi-value" id="passedAgents">—</div><div class="kpi-sub">pipeline atual</div></div>
+        <div class="card"><div class="kpi-label">Tarefas hoje</div><div class="kpi-value" id="tasks">0</div><div class="kpi-sub" id="taskTarget">meta —</div></div>
+        <div class="card"><div class="kpi-label">Commits hoje</div><div class="kpi-value" id="commits">0</div><div class="kpi-sub">mudanças significativas</div></div>
+        <div class="card"><div class="kpi-label">Falhas hoje</div><div class="kpi-value" id="failures">0</div><div class="kpi-sub">inclui bloqueios operacionais</div></div>
+        <div class="card"><div class="kpi-label">Custo externo</div><div class="kpi-value" id="cost">US$ 0,00</div><div class="kpi-sub">limite US$ 0,00</div></div>
+      </div>
 
-  <section class="section card">
-    <h2>Daily plan</h2>
-    <div id="dailyPlan" class="muted">No plan recorded yet.</div>
-  </section>
+      <div class="grid-2">
+        <section class="card">
+          <div class="section-head"><h2>Pipeline de agentes</h2><span class="pill" id="pipelineSummary">—</span></div>
+          <div class="pipeline" id="pipeline"></div>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>Operação atual</h2><span class="pill normal" id="operatorMode">normal</span></div>
+          <div class="statline"><span class="muted">Último projeto iniciado</span><strong id="lastProject">—</strong></div>
+          <div class="statline"><span class="muted">Próximo projeto elegível</span><strong id="nextProject">—</strong></div>
+          <div class="statline"><span class="muted">Diretiva</span><strong id="directive">nenhuma</strong></div>
+          <div class="statline"><span class="muted">Escopo permitido</span><strong class="mono" id="scope">DatalabMp/*</strong></div>
+        </section>
+      </div>
 
-  <section class="section card">
-    <h2>Agents</h2>
-    <table>
-      <thead><tr><th>Agent</th><th>State</th><th>Write access</th><th>Veto</th></tr></thead>
-      <tbody id="agents"></tbody>
-    </table>
-  </section>
+      <div class="grid-even">
+        <section class="card">
+          <div class="section-head"><h2>Fila de projetos</h2><span class="muted tiny" id="projectCount">—</span></div>
+          <div class="project-list" id="projects"></div>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>Agenda do dia</h2><span class="pill" id="slotCount">—</span></div>
+          <div class="schedule" id="schedule"></div>
+          <p class="muted tiny" id="scheduleNote"></p>
+        </section>
+      </div>
+    </section>
 
-  <section class="section card">
-    <h2>Project queue</h2>
-    <table>
-      <thead><tr><th>Priority</th><th>Project</th><th>Status</th><th>Progress</th></tr></thead>
-      <tbody id="projects"></tbody>
-    </table>
-  </section>
+    <section class="view" id="view-orchestration">
+      <div class="grid-2">
+        <section class="card">
+          <div class="section-head"><h2>Agentes e gates</h2><span class="muted tiny">somente Executor escreve</span></div>
+          <div class="agent-list" id="agents"></div>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>Quality gates</h2><span class="pill passed">enforced</span></div>
+          <div class="policy-list" id="gates"></div>
+          <div style="height:15px"></div>
+          <div class="section-head"><h2>Boundary de segurança</h2><span class="pill passed">locked</span></div>
+          <div class="policy-list" id="security"></div>
+        </section>
+      </div>
+    </section>
 
-  <section class="section card">
-    <h2>Recent events</h2>
-    <div id="events" class="muted">No events recorded yet.</div>
-  </section>
+    <section class="view" id="view-ai">
+      <div class="grid-even">
+        <section class="card">
+          <div class="section-head"><h2>Consumo rastreado</h2><span class="pill" id="telemetryStatus">—</span></div>
+          <div class="token-grid">
+            <div class="mini"><span class="muted tiny">Requests</span><strong id="requests">0</strong></div>
+            <div class="mini"><span class="muted tiny">Input tokens</span><strong id="inputTokens">0</strong></div>
+            <div class="mini"><span class="muted tiny">Output tokens</span><strong id="outputTokens">0</strong></div>
+            <div class="mini"><span class="muted tiny">Total tokens</span><strong id="totalTokens">0</strong></div>
+          </div>
+          <div class="notice" id="tokenNote">Aguardando telemetria.</div>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>Cost guard</h2><span class="pill passed">hard cap</span></div>
+          <div class="statline"><span class="muted">Custo externo confirmado</span><strong id="confirmedCost">US$ 0,00</strong></div>
+          <div class="statline"><span class="muted">Limite permitido</span><strong id="costCap">US$ 0,00</strong></div>
+          <div class="statline"><span class="muted">Paid models</span><strong id="paidModels">OFF</strong></div>
+          <div class="statline"><span class="muted">Paid fallback</span><strong id="paidFallback">OFF</strong></div>
+          <div class="statline"><span class="muted">Provider mode</span><strong id="providerMode">disabled</strong></div>
+        </section>
+      </div>
+      <section class="card">
+        <div class="section-head"><h2>Provedores / quota</h2><span class="muted tiny">somente dados reportados</span></div>
+        <div class="provider-list" id="providers"></div>
+      </section>
+    </section>
 
-  <p class="muted section">Last snapshot: <span id="generated">not generated yet</span></p>
-</main>
-<script>
-async function load() {
-  const response = await fetch('./monitor.json', {cache: 'no-store'});
-  const data = await response.json();
-  const projects = data.projects || [];
-  const agents = data.agents || {};
-  const metrics = data.metrics || {};
-  const control = data.operator_control || {};
+    <section class="view" id="view-events">
+      <section class="card">
+        <div class="section-head"><h2>Timeline operacional</h2><span class="muted tiny" id="eventCount">—</span></div>
+        <div class="event-list" id="events"></div>
+      </section>
+    </section>
 
-  document.querySelector('#projectCount').textContent = projects.length;
-  document.querySelector('#agentCount').textContent = Object.keys(agents).length;
-  document.querySelector('#tasks').textContent = metrics.tasks_today || 0;
-  document.querySelector('#commits').textContent = metrics.commits_today || 0;
-  document.querySelector('#failures').textContent = metrics.failures_today || 0;
-  document.querySelector('#cost').textContent = `$${Number(data.external_ai_cost_usd || 0).toFixed(2)}`;
-  document.querySelector('#provider').textContent = data.provider_mode || 'disabled';
-  document.querySelector('#operatorMode').textContent = control.mode || 'normal';
-  document.querySelector('#generated').textContent = data.generated_at || 'not generated yet';
+    <section class="view" id="view-controls">
+      <div class="grid-even">
+        <section class="card">
+          <div class="section-head"><h2>Comandos do operador</h2><span class="muted tiny">via GitHub Issues auditáveis</span></div>
+          <div class="control-grid">
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new?title=%5Bcontrol%5D%20pause"><div><strong>Pausar</strong><div class="muted tiny">Bloqueia alterações de projeto.</div></div><span class="pill waiting">[control] pause</span></a>
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new?title=%5Bcontrol%5D%20resume"><div><strong>Retomar</strong><div class="muted tiny">Retorna ao modo normal.</div></div><span class="pill passed">[control] resume</span></a>
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new?title=%5Bcontrol%5D%20review%20brazil-road-safety"><div><strong>Revisar projeto</strong><div class="muted tiny">Solicita revisão do projeto ativo.</div></div><span class="pill">[control] review</span></a>
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new?title=%5Bcontrol%5D%20focus%20brazil-road-safety"><div><strong>Focar projeto</strong><div class="muted tiny">Prioriza o projeto indicado.</div></div><span class="pill">[control] focus</span></a>
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new?title=%5Bcontrol%5D%20deploy%20brazil-road-safety"><div><strong>Solicitar deploy</strong><div class="muted tiny">Passa pelos gates antes do deploy.</div></div><span class="pill">[control] deploy</span></a>
+            <a class="control" target="_blank" rel="noreferrer" href="https://github.com/DatalabMp/datalab-controller/issues/new"><div><strong>Abrir issue</strong><div class="muted tiny">Registre uma solicitação ou observação.</div></div><span class="pill">GitHub Issue ↗</span></a>
+          </div>
+        </section>
+        <section class="card">
+          <div class="section-head"><h2>Política operacional</h2><span class="pill passed">zero-cost</span></div>
+          <div class="policy-list" id="operationalPolicy"></div>
+        </section>
+      </div>
+    </section>
 
-  document.querySelector('#operatorControl').innerHTML = control.directive
-    ? `<p><strong>${control.directive}</strong></p><p>Source issue: ${control.issue_number ? '#' + control.issue_number : 'unknown'}${control.updated_at ? ' • ' + control.updated_at : ''}</p>`
-    : 'No control directive recorded. Use a controller issue beginning with <code>[control]</code> to direct work.';
+    <footer class="footer">
+      <span>DataLab Operations Center · nenhum segredo é publicado no snapshot.</span>
+      <span>Snapshot UTC: <span id="generated">—</span></span>
+    </footer>
+  </main>
 
-  document.querySelector('#safety').innerHTML = `
-    <p>Allowed owner: <code>${data.safety.allowed_owner}</code></p>
-    <p>Paid models: <strong>${data.safety.paid_models_allowed ? 'ENABLED' : 'DISABLED'}</strong></p>
-    <p>Paid fallback: <strong>${data.safety.paid_fallback_allowed ? 'ENABLED' : 'DISABLED'}</strong></p>`;
+  <script>
+    (() => {
+      const root = document;
+      let currentData = null;
+      const $ = (selector) => root.querySelector(selector);
+      const $$ = (selector) => [...root.querySelectorAll(selector)];
+      const esc = (value) => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+      const fmtInt = (value) => new Intl.NumberFormat('pt-BR').format(Number(value || 0));
+      const fmtUsd = (value) => `US$ ${Number(value || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 4})}`;
+      const fmtDate = (value) => {
+        if (!value) return '—';
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? String(value) : date.toLocaleString('pt-BR');
+      };
+      const slugLabel = (value) => String(value || '—').replaceAll('-', ' ');
+      const stateClass = (state) => String(state || 'idle').toLowerCase().replace(/[^a-z_]/g, '');
+      const pill = (state) => `<span class="pill ${stateClass(state)}">${esc(state || 'idle')}</span>`;
 
-  const plan = data.daily_plan || {};
-  document.querySelector('#dailyPlan').textContent = plan.date
-    ? `${plan.date}: ${plan.target_slots || 0} work slots — ${(plan.hours || []).join(', ')}`
-    : 'No plan recorded yet.';
+      function setView(name) {
+        $$('.tab').forEach(tab => tab.classList.toggle('active', tab.dataset.view === name));
+        $$('.view').forEach(view => view.classList.toggle('active', view.id === `view-${name}`));
+      }
 
-  document.querySelector('#agents').innerHTML = Object.entries(agents).map(([name, spec]) => `
-    <tr><td>${name}</td><td><span class="pill">${spec.state}</span></td><td>${spec.can_write ? 'yes' : 'no'}</td><td>${spec.veto ? 'yes' : 'no'}</td></tr>`).join('');
+      function renderPipeline(data) {
+        const pipeline = data.pipeline || [];
+        $('#pipeline').innerHTML = pipeline.map(stage => `
+          <div class="stage ${stateClass(stage.state)}" title="${esc(stage.detail)}">
+            <div class="stage-num">${stage.order}</div>
+            <div class="stage-name">${esc(stage.name)}</div>
+            <div class="stage-state">${esc(stage.state)}</div>
+          </div>`).join('');
+        const passed = pipeline.filter(stage => stage.state === 'passed').length;
+        $('#pipelineSummary').textContent = `${passed}/${pipeline.length} passed`;
+      }
 
-  document.querySelector('#projects').innerHTML = projects.sort((a,b) => a.priority - b.priority).map(project => `
-    <tr><td>${project.priority}</td><td>${project.title}</td><td><span class="pill">${project.status}</span></td><td><progress max="100" value="${project.progress || 0}"></progress> ${project.progress || 0}%</td></tr>`).join('');
+      function renderProjects(data) {
+        const projects = [...(data.projects || [])].sort((a,b) => a.priority - b.priority);
+        $('#projectCount').textContent = `${projects.length} projetos registrados`;
+        $('#projects').innerHTML = projects.map(project => `
+          <div class="project-row">
+            <div><a class="project-title" href="${esc(project.repository_url)}" target="_blank" rel="noreferrer">${esc(project.title)} ↗</a><div class="source">#${project.priority} · ${esc(project.source)}${project.blocker ? ' · blocker: ' + esc(project.blocker) : ''}</div></div>
+            <div class="project-progress"><div class="progress-track"><div class="progress-fill" style="width:${Math.max(0, Math.min(100, Number(project.progress || 0)))}%"></div></div>${pill(project.status)}</div>
+            <div class="project-percent">${Number(project.progress || 0)}%</div>
+          </div>`).join('');
+        const active = projects.find(p => p.slug === data.active_project) || projects.find(p => ['active','initialized'].includes(p.status));
+        $('#activeProject').textContent = active ? slugLabel(active.slug) : '—';
+        $('#activeProgress').textContent = active ? `${active.progress}% · ${active.source}` : 'nenhum ativo';
+      }
 
-  const events = data.recent_events || [];
-  document.querySelector('#events').innerHTML = events.length
-    ? events.slice().reverse().map(event => `<div class="event"><strong>${event.agent || 'system'}</strong> — ${event.action || event.task || 'event'} <span class="pill">${event.status || 'recorded'}</span><br><span class="muted">${event.timestamp || ''} ${event.project ? '• ' + event.project : ''}</span></div>`).join('')
-    : 'No events recorded yet.';
-}
-load().catch(error => {
-  document.querySelector('#safety').textContent = `Monitor unavailable: ${error.message}`;
-});
-</script>
+      function renderSchedule(data) {
+        const plan = data.daily_plan || {};
+        const slots = new Set((plan.hours || []).map(Number));
+        const now = new Date().getHours();
+        $('#schedule').innerHTML = Array.from({length:24}, (_, hour) => `<div class="hour ${slots.has(hour) ? 'on' : ''} ${hour === now ? 'now' : ''}">${String(hour).padStart(2,'0')}h</div>`).join('');
+        $('#slotCount').textContent = `${plan.target_slots || 0} slots`;
+        $('#scheduleNote').textContent = plan.date ? `${plan.date} · blocos são oportunidades; só há commit quando existe mudança significativa.` : 'Nenhum plano diário registrado.';
+      }
+
+      function renderAgents(data) {
+        const agents = data.pipeline || [];
+        $('#agents').innerHTML = agents.map(agent => `
+          <article class="agent">
+            <div class="agent-top"><div><strong>${agent.order}. ${esc(agent.name)}</strong></div>${pill(agent.state)}</div>
+            <div class="agent-detail">${esc(agent.detail)}</div>
+            <div class="agent-detail"><strong>Responsabilidade:</strong> ${esc(agent.responsibility)}</div>
+            <div class="agent-meta"><span class="pill">write: ${agent.can_write ? 'yes' : 'no'}</span><span class="pill ${agent.veto ? 'waiting' : ''}">veto: ${agent.veto ? 'yes' : 'no'}</span></div>
+          </article>`).join('');
+      }
+
+      function renderGates(data) {
+        const labels = {
+          require_requirements:'Requirements', require_architecture:'Architecture', require_data_review:'Data review', require_statistics_review:'Statistics review', require_qa:'QA', require_security:'Security', require_final_review:'Final review'
+        };
+        $('#gates').innerHTML = Object.entries(data.quality_gates || {}).map(([key, enabled]) => `<div class="policy-item"><span class="check">${enabled ? '✓' : '○'}</span><span>${esc(labels[key] || key)}</span></div>`).join('');
+        const p = data.policy || {};
+        const forbidden = (p.forbidden_operations || []).join(', ');
+        $('#security').innerHTML = `
+          <div class="policy-item"><span class="check">✓</span><span>Owner permitido: <span class="mono">${esc(p.allowed_owner)}/*</span></span></div>
+          <div class="policy-item"><span class="check">✓</span><span>Projetos públicos: ${p.public_projects_only ? 'obrigatório' : 'não exigido'}</span></div>
+          <div class="policy-item"><span class="check">✓</span><span>Manifest obrigatório: <span class="mono">${esc(p.required_manifest)}</span></span></div>
+          <div class="policy-item"><span class="lock">⌁</span><span>Operações proibidas: ${esc(forbidden)}</span></div>`;
+      }
+
+      function renderTelemetry(data) {
+        const t = data.telemetry || {};
+        $('#telemetryStatus').textContent = t.reporting_status === 'tracked' ? 'tracked' : 'not reported';
+        $('#requests').textContent = fmtInt(t.requests);
+        $('#inputTokens').textContent = fmtInt(t.input_tokens);
+        $('#outputTokens').textContent = fmtInt(t.output_tokens);
+        $('#totalTokens').textContent = fmtInt(t.total_tokens);
+        $('#tokenNote').textContent = t.note || 'Sem descrição de telemetria.';
+        $('#confirmedCost').textContent = fmtUsd(t.confirmed_external_cost_usd);
+        $('#costCap').textContent = fmtUsd(t.max_external_cost_usd);
+        $('#cost').textContent = fmtUsd(t.confirmed_external_cost_usd);
+        $('#providerMode').textContent = t.provider_mode || 'disabled';
+        $('#paidModels').textContent = data.policy?.paid_models_allowed ? 'ON' : 'OFF';
+        $('#paidFallback').textContent = data.policy?.paid_fallback_allowed ? 'ON' : 'OFF';
+        const providers = data.providers || [];
+        $('#providers').innerHTML = providers.length ? providers.map(provider => `
+          <div class="project-row">
+            <div><strong>${esc(provider.name)}</strong><div class="source">${esc(provider.mode)} · ${esc(provider.status)}</div></div>
+            <div class="tiny muted">${fmtInt(provider.requests)} req · ${fmtInt(provider.total_tokens)} tokens</div>
+            <div class="project-percent">${fmtUsd(provider.cost_usd)}</div>
+          </div>`).join('') : '<div class="empty">Nenhum provedor externo reportando uso. O sistema permanece em custo externo zero.</div>';
+      }
+
+      function renderEvents(data) {
+        const events = [...(data.recent_events || [])].reverse();
+        $('#eventCount').textContent = `${events.length} eventos no snapshot`;
+        $('#events').innerHTML = events.length ? events.map(event => `
+          <div class="event">
+            <div class="event-time">${esc(fmtDate(event.timestamp))}</div>
+            <div><div class="event-type">${esc(event.type || event.action || event.status || 'event')}</div><div class="event-detail">${esc(event.detail || event.task || 'Sem detalhe.')}</div></div>
+          </div>`).join('') : '<div class="empty">Nenhum evento registrado.</div>';
+      }
+
+      function renderControls(data) {
+        const p = data.policy || {};
+        $('#operationalPolicy').innerHTML = `
+          <div class="policy-item"><span class="check">✓</span><span>Somente mudanças significativas: ${p.require_meaningful_changes ? 'sim' : 'não'}</span></div>
+          <div class="policy-item"><span class="check">✓</span><span>Meta diária: ${p.daily_task_target_min || 0}–${p.daily_task_target_max || 0} oportunidades de trabalho.</span></div>
+          <div class="policy-item"><span class="check">✓</span><span>Novo projeto: intervalo mínimo de ${p.new_project_interval_days || 0} dias.</span></div>
+          <div class="policy-item"><span class="lock">⌁</span><span>Paid models e paid fallback permanecem bloqueados.</span></div>
+          <div class="policy-item"><span class="lock">⌁</span><span>Secrets nunca são serializados no <span class="mono">monitor.json</span>.</span></div>`;
+      }
+
+      function render(data) {
+        currentData = data;
+        const metrics = data.metrics || {};
+        const policy = data.policy || {};
+        const control = data.operator_control || {};
+        $('#tasks').textContent = fmtInt(metrics.tasks_today);
+        $('#commits').textContent = fmtInt(metrics.commits_today);
+        $('#failures').textContent = fmtInt(metrics.failures_today);
+        $('#passedAgents').textContent = `${metrics.passed_agents || 0}/${(data.pipeline || []).length}`;
+        $('#taskTarget').textContent = `meta ${policy.daily_task_target_min || 0}–${policy.daily_task_target_max || 0}`;
+        $('#operatorMode').textContent = control.mode || 'normal';
+        $('#operatorMode').className = `pill ${stateClass(control.mode || 'normal')}`;
+        $('#directive').textContent = control.directive || 'nenhuma';
+        $('#scope').textContent = `${policy.allowed_owner || 'DatalabMp'}/*`;
+        $('#lastProject').textContent = fmtDate(data.last_project_started_at);
+        $('#nextProject').textContent = fmtDate(data.next_project_eligible_at);
+        $('#generated').textContent = fmtDate(data.generated_at);
+        $('#controllerLink').href = data.controller_url || $('#controllerLink').href;
+        renderPipeline(data);
+        renderProjects(data);
+        renderSchedule(data);
+        renderAgents(data);
+        renderGates(data);
+        renderTelemetry(data);
+        renderEvents(data);
+        renderControls(data);
+        updateAge();
+      }
+
+      function updateAge() {
+        if (!currentData?.generated_at) return;
+        const stamp = new Date(currentData.generated_at).getTime();
+        const seconds = Math.max(0, Math.floor((Date.now() - stamp) / 1000));
+        const label = seconds < 60 ? `${seconds}s atrás` : seconds < 3600 ? `${Math.floor(seconds/60)}min atrás` : `${Math.floor(seconds/3600)}h atrás`;
+        $('#snapshotAge').textContent = `snapshot ${label}`;
+        const stale = seconds > 3600;
+        $('#healthText').textContent = stale ? 'snapshot desatualizado' : 'monitor online';
+        $('#healthDot').style.background = stale ? 'var(--amber)' : 'var(--green)';
+      }
+
+      async function load() {
+        const button = $('#refresh');
+        button.disabled = true;
+        button.textContent = '↻ Atualizando…';
+        try {
+          const response = await fetch(`./monitor.json?t=${Date.now()}`, {cache: 'no-store'});
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          render(await response.json());
+          button.textContent = '✓ Atualizado';
+          setTimeout(() => { button.textContent = '↻ Atualizar'; }, 900);
+        } catch (error) {
+          $('#healthText').textContent = `monitor indisponível: ${error.message}`;
+          $('#healthDot').style.background = 'var(--red)';
+          button.textContent = '↻ Tentar novamente';
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      $$('.tab').forEach(tab => tab.addEventListener('click', () => setView(tab.dataset.view)));
+      $('#refresh').addEventListener('click', load);
+      load();
+      setInterval(load, 60000);
+      setInterval(updateAge, 10000);
+    })();
+  </script>
 </body>
 </html>
