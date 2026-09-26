@@ -1,6 +1,12 @@
 organization: DatalabMp
 controller_repository: datalab-controller
 
+localization:
+  language: pt-BR
+  user_facing_language: pt-BR
+  commit_messages_language: pt-BR
+  require_portuguese_commit_messages: true
+
 execution:
   external_ai_max_cost_usd: 0.0
   allow_paid_models: false
