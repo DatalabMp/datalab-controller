@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "23 * * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "datalab/project_factory.py"
+      - ".github/workflows/project-factory.yml"
 
 permissions:
   contents: write
