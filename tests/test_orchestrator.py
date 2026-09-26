@@ -27,4 +27,4 @@ def test_snapshot_never_invents_provider_token_usage() -> None:
     assert telemetry["max_external_cost_usd"] == 0.0
     assert telemetry["total_tokens"] == 0
     assert telemetry["reporting_status"] == "unavailable"
-    assert "not exposed" in telemetry["note"]
+    assert "não é exposto" in telemetry["note"]
