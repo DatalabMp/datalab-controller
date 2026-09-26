@@ -42,8 +42,20 @@ Create and evolve public, reproducible data-science projects based on real datas
 
 ## Monitoring
 
-The controller will publish an Agent Operations Center with project progress, agent state, tasks, validation gates, failures, commits, provider quota state and confirmed external-model cost (`0.00`).
+The Agent Operations Center is published through GitHub Pages and is rebuilt from controller state. It shows project progress, agent state, validation gates, failures, commits, provider state and confirmed external-model cost.
+
+Expected URL: `https://datalabmp.github.io/datalab-controller/`
+
+## Project Factory
+
+The controller includes a guarded repository factory for the 72-hour project cadence. It is disabled until the dedicated GitHub App credentials are added as Actions secrets. See [`docs/PROJECT_FACTORY_SETUP.md`](docs/PROJECT_FACTORY_SETUP.md).
+
+The factory can create only public repositories under `DatalabMp`, refuses automatic adoption of pre-existing repositories, initializes the DataLab manifest/CI/tests/Pages scaffold, and records the new project in controller state.
 
 ## Status
 
-Foundation in progress.
+- Controller foundation: active
+- CI: passing
+- Operations Center: GitHub Pages deployment enabled
+- Project Factory code: prepared
+- Project Factory credentials: pending operator setup

@@ -1,0 +1,72 @@
+name: Project Factory
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datalab-project-factory
+  cancel-in-progress: false
+
+jobs:
+  factory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout controller
+        uses: actions/checkout@v5
+
+      - name: Credential preflight
+        id: credentials
+        env:
+          APP_ID: ${{ secrets.DATALAB_APP_ID }}
+          PRIVATE_KEY: ${{ secrets.DATALAB_PRIVATE_KEY }}
+        run: |
+          if [ -n "$APP_ID" ] && [ -n "$PRIVATE_KEY" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "Project Factory paused: GitHub App credentials are not configured."
+          fi
+
+      - name: Generate organization-scoped GitHub App token
+        if: steps.credentials.outputs.ready == 'true'
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.DATALAB_APP_ID }}
+          private-key: ${{ secrets.DATALAB_PRIVATE_KEY }}
+          owner: DatalabMp
+
+      - name: Set up Python
+        if: steps.credentials.outputs.ready == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install controller
+        if: steps.credentials.outputs.ready == 'true'
+        run: python -m pip install -e .
+
+      - name: Run project factory
+        if: steps.credentials.outputs.ready == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          DATALAB_FACTORY_ENABLED: "true"
+        run: python -m datalab.project_factory
+
+      - name: Persist controller state
+        if: steps.credentials.outputs.ready == 'true'
+        run: |
+          git config user.name "Datalab Project Factory"
+          git config user.email "actions@users.noreply.github.com"
+          git add config/projects.yaml state/runtime.json
+          if git diff --cached --quiet; then
+            echo "No controller state change to persist."
+          else
+            git commit -m "ops: start next managed DataLab project"
+            git push
+          fi
