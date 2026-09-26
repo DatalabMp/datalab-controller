@@ -1,0 +1,42 @@
+organization: DatalabMp
+controller_repository: datalab-controller
+
+execution:
+  external_ai_max_cost_usd: 0.0
+  allow_paid_models: false
+  allow_paid_fallback: false
+  require_meaningful_changes: true
+  daily_task_target_min: 10
+  daily_task_target_max: 15
+  new_project_interval_days: 3
+  pause_when_all_free_capacity_exhausted: true
+
+repository_policy:
+  public_projects_only: true
+  required_manifest: .datalab/manifest.json
+  allowed_owner: DatalabMp
+  forbidden_operations:
+    - delete_repository
+    - transfer_repository
+    - change_repository_owner
+    - manage_billing
+    - manage_members
+    - modify_account
+    - write_outside_allowed_owner
+
+provider_policy:
+  default_mode: disabled
+  allowed_modes:
+    - local
+    - remote_free
+  on_quota_exhausted: pause
+  on_unknown_pricing: reject
+
+quality_gates:
+  require_requirements: true
+  require_architecture: true
+  require_data_review: true
+  require_statistics_review: true
+  require_qa: true
+  require_security: true
+  require_final_review: true

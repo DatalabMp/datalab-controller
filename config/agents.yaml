@@ -1,0 +1,53 @@
+agents:
+  requirements:
+    can_write: false
+    veto: false
+    responsibility: define research question, scope, acceptance criteria and deliverables
+  architecture:
+    can_write: false
+    veto: true
+    responsibility: define boundaries, modules, dependencies and deployment design
+  data:
+    can_write: false
+    veto: true
+    responsibility: inspect schema, data quality, transformations, missingness and provenance
+  statistics:
+    can_write: false
+    veto: true
+    responsibility: validate statistical methods, assumptions, uncertainty and interpretation
+  modeling:
+    can_write: false
+    veto: false
+    responsibility: justify predictive tasks, baselines, metrics, leakage controls and validation
+  visualization:
+    can_write: false
+    veto: false
+    responsibility: design truthful, accessible and question-driven visualizations and dashboards
+  qa:
+    can_write: false
+    veto: true
+    responsibility: execute tests, linting, smoke checks and edge-case validation
+  security:
+    can_write: false
+    veto: true
+    responsibility: enforce repository scope, secret hygiene, dependency safety and command safety
+  reviewer:
+    can_write: false
+    veto: true
+    responsibility: independent cross-check before release
+  executor:
+    can_write: true
+    veto: false
+    responsibility: apply only approved changes and create meaningful commits
+
+pipeline:
+  - requirements
+  - architecture
+  - data
+  - statistics
+  - modeling
+  - visualization
+  - qa
+  - security
+  - reviewer
+  - executor

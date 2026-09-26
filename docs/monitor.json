@@ -1,0 +1,32 @@
+{
+  "generated_at": null,
+  "organization": "DatalabMp",
+  "controller_repository": "datalab-controller",
+  "external_ai_cost_usd": 0.0,
+  "provider_mode": "disabled",
+  "projects": [
+    {"slug": "brazil-road-safety", "title": "Brazil Road Safety Analytics", "status": "queued", "priority": 1},
+    {"slug": "brazil-economic-monitor", "title": "Brazil Economic Monitor", "status": "queued", "priority": 2},
+    {"slug": "enem-analytics", "title": "ENEM Analytics", "status": "queued", "priority": 3},
+    {"slug": "brazil-labor-observatory", "title": "Brazil Population & Labor Observatory", "status": "queued", "priority": 4},
+    {"slug": "sus-health-analytics", "title": "SUS Health Analytics", "status": "queued", "priority": 5},
+    {"slug": "brazil-agriculture-analytics", "title": "Brazil Agriculture Analytics", "status": "queued", "priority": 6}
+  ],
+  "agents": {
+    "requirements": {"state": "idle", "can_write": false, "veto": false},
+    "architecture": {"state": "idle", "can_write": false, "veto": true},
+    "data": {"state": "idle", "can_write": false, "veto": true},
+    "statistics": {"state": "idle", "can_write": false, "veto": true},
+    "modeling": {"state": "idle", "can_write": false, "veto": false},
+    "visualization": {"state": "idle", "can_write": false, "veto": false},
+    "qa": {"state": "idle", "can_write": false, "veto": true},
+    "security": {"state": "idle", "can_write": false, "veto": true},
+    "reviewer": {"state": "idle", "can_write": false, "veto": true},
+    "executor": {"state": "blocked", "can_write": true, "veto": false}
+  },
+  "safety": {
+    "allowed_owner": "DatalabMp",
+    "paid_models_allowed": false,
+    "paid_fallback_allowed": false
+  }
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DataLab Operations Center</title>
+  <style>
+    :root { color-scheme: light dark; font-family: Inter, system-ui, sans-serif; }
+    body { margin: 0; background: Canvas; color: CanvasText; }
+    main { max-width: 1180px; margin: 0 auto; padding: 32px 20px 56px; }
+    h1, h2 { margin: 0 0 12px; }
+    .muted { opacity: .68; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin: 24px 0; }
+    .card { border: 1px solid color-mix(in srgb, CanvasText 16%, transparent); border-radius: 14px; padding: 18px; background: color-mix(in srgb, Canvas 94%, CanvasText 6%); }
+    .metric { font-size: 1.8rem; font-weight: 700; margin-top: 6px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid color-mix(in srgb, CanvasText 13%, transparent); }
+    .pill { display: inline-block; border: 1px solid currentColor; border-radius: 999px; padding: 2px 9px; font-size: .82rem; }
+    .section { margin-top: 34px; }
+    code { font-size: .92em; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>DataLab Operations Center</h1>
+  <p class="muted">DatalabMp autonomous data-science control plane</p>
+
+  <div class="grid">
+    <div class="card"><div class="muted">Projects</div><div id="projectCount" class="metric">—</div></div>
+    <div class="card"><div class="muted">Agents</div><div id="agentCount" class="metric">—</div></div>
+    <div class="card"><div class="muted">External AI cost</div><div id="cost" class="metric">$0.00</div></div>
+    <div class="card"><div class="muted">Provider mode</div><div id="provider" class="metric">—</div></div>
+  </div>
+
+  <section class="section card">
+    <h2>Safety boundary</h2>
+    <div id="safety">Loading…</div>
+  </section>
+
+  <section class="section card">
+    <h2>Agents</h2>
+    <table>
+      <thead><tr><th>Agent</th><th>State</th><th>Write access</th><th>Veto</th></tr></thead>
+      <tbody id="agents"></tbody>
+    </table>
+  </section>
+
+  <section class="section card">
+    <h2>Project queue</h2>
+    <table>
+      <thead><tr><th>Priority</th><th>Project</th><th>Status</th></tr></thead>
+      <tbody id="projects"></tbody>
+    </table>
+  </section>
+
+  <p class="muted section">Last snapshot: <span id="generated">not generated yet</span></p>
+</main>
+<script>
+async function load() {
+  const response = await fetch('./monitor.json', {cache: 'no-store'});
+  const data = await response.json();
+
+  const projects = data.projects || [];
+  const agents = data.agents || {};
+  document.querySelector('#projectCount').textContent = projects.length;
+  document.querySelector('#agentCount').textContent = Object.keys(agents).length;
+  document.querySelector('#cost').textContent = `$${Number(data.external_ai_cost_usd || 0).toFixed(2)}`;
+  document.querySelector('#provider').textContent = data.provider_mode || 'disabled';
+  document.querySelector('#generated').textContent = data.generated_at || 'not generated yet';
+
+  document.querySelector('#safety').innerHTML = `
+    <p>Allowed owner: <code>${data.safety.allowed_owner}</code></p>
+    <p>Paid models: <strong>${data.safety.paid_models_allowed ? 'ENABLED' : 'DISABLED'}</strong></p>
+    <p>Paid fallback: <strong>${data.safety.paid_fallback_allowed ? 'ENABLED' : 'DISABLED'}</strong></p>`;
+
+  document.querySelector('#agents').innerHTML = Object.entries(agents).map(([name, spec]) => `
+    <tr><td>${name}</td><td><span class="pill">${spec.state}</span></td><td>${spec.can_write ? 'yes' : 'no'}</td><td>${spec.veto ? 'yes' : 'no'}</td></tr>`).join('');
+
+  document.querySelector('#projects').innerHTML = projects.sort((a,b) => a.priority - b.priority).map(project => `
+    <tr><td>${project.priority}</td><td>${project.title}</td><td><span class="pill">${project.status}</span></td></tr>`).join('');
+}
+load().catch(error => {
+  document.querySelector('#safety').textContent = `Monitor unavailable: ${error.message}`;
+});
+</script>
+</body>
+</html>

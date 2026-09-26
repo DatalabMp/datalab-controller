@@ -1,0 +1,17 @@
+[project]
+name = "datalab-controller"
+version = "0.1.0"
+description = "Zero-cost control plane for DatalabMp data-science projects"
+requires-python = ">=3.12"
+dependencies = ["PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "ruff>=0.8,<1"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
