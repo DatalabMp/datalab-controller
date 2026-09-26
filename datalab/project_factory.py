@@ -59,7 +59,7 @@ def interval_elapsed(
     if not last_started_at:
         return True
     current = now or datetime.now(UTC)
-    previous = datetime.fromisoformat(last_started_at.replace("Z", "+00:00"))
+    previous = datetime.fromisoformat(last_started_at)
     if previous.tzinfo is None:
         previous = previous.replace(tzinfo=UTC)
     return current - previous >= timedelta(days=interval_days)
@@ -225,7 +225,7 @@ class GitHubClient:
             },
         )
         try:
-            with urlopen(request, timeout=30) as response:  # noqa: S310
+            with urlopen(request, timeout=30) as response:
                 body = response.read().decode("utf-8")
         except HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")[:800]
@@ -244,7 +244,7 @@ class GitHubClient:
             },
         )
         try:
-            with urlopen(request, timeout=30):  # noqa: S310
+            with urlopen(request, timeout=30):
                 return True
         except HTTPError as exc:
             if exc.code == 404:
