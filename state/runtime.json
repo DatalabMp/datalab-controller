@@ -6,6 +6,12 @@
     "target_slots": 0,
     "hours": []
   },
+  "operator_control": {
+    "mode": "normal",
+    "directive": null,
+    "issue_number": null,
+    "updated_at": null
+  },
   "active_project": null,
   "last_project_started_at": null,
   "tasks_today": 0,

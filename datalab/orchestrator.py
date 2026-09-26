@@ -53,6 +53,10 @@ def build_status_snapshot() -> dict:
             "failures_today": int(runtime.get("failures_today", 0)),
         },
         "daily_plan": runtime.get("daily_plan", {}),
+        "operator_control": runtime.get(
+            "operator_control",
+            {"mode": "normal", "directive": None, "issue_number": None, "updated_at": None},
+        ),
         "active_project": runtime.get("active_project"),
         "last_project_started_at": runtime.get("last_project_started_at"),
         "projects": project_rows,

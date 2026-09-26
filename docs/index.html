@@ -35,7 +35,13 @@
     <div class="card"><div class="muted">Failures today</div><div id="failures" class="metric">0</div></div>
     <div class="card"><div class="muted">External AI cost</div><div id="cost" class="metric">$0.00</div></div>
     <div class="card"><div class="muted">Provider mode</div><div id="provider" class="metric">—</div></div>
+    <div class="card"><div class="muted">Operator mode</div><div id="operatorMode" class="metric">normal</div></div>
   </div>
+
+  <section class="section card">
+    <h2>Operator direction</h2>
+    <div id="operatorControl" class="muted">No control directive recorded.</div>
+  </section>
 
   <section class="section card">
     <h2>Safety boundary</h2>
@@ -77,6 +83,7 @@ async function load() {
   const projects = data.projects || [];
   const agents = data.agents || {};
   const metrics = data.metrics || {};
+  const control = data.operator_control || {};
 
   document.querySelector('#projectCount').textContent = projects.length;
   document.querySelector('#agentCount').textContent = Object.keys(agents).length;
@@ -85,7 +92,12 @@ async function load() {
   document.querySelector('#failures').textContent = metrics.failures_today || 0;
   document.querySelector('#cost').textContent = `$${Number(data.external_ai_cost_usd || 0).toFixed(2)}`;
   document.querySelector('#provider').textContent = data.provider_mode || 'disabled';
+  document.querySelector('#operatorMode').textContent = control.mode || 'normal';
   document.querySelector('#generated').textContent = data.generated_at || 'not generated yet';
+
+  document.querySelector('#operatorControl').innerHTML = control.directive
+    ? `<p><strong>${control.directive}</strong></p><p>Source issue: ${control.issue_number ? '#' + control.issue_number : 'unknown'}${control.updated_at ? ' • ' + control.updated_at : ''}</p>`
+    : 'No control directive recorded. Use a controller issue beginning with <code>[control]</code> to direct work.';
 
   document.querySelector('#safety').innerHTML = `
     <p>Allowed owner: <code>${data.safety.allowed_owner}</code></p>
