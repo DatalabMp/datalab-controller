@@ -10,30 +10,30 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-27T07:14:50-03:00"
+    "updated_at": "2026-09-27T10:16:36-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 5,
-  "commits_today": 13,
+  "tasks_today": 6,
+  "commits_today": 14,
   "failures_today": 2,
   "agents": {
-    "requirements": {"status": "passed", "detail": "Cada ocorrência precisa de identificador presente para garantir rastreabilidade, unicidade e auditoria antes da análise."},
-    "architecture": {"status": "passed", "detail": "A regra permanece no gate de qualidade e não altera a camada de ingestão bruta."},
-    "data_engineering": {"status": "passed", "detail": "O gate agora reprova identificadores ausentes além de verificar duplicidades de ID."},
-    "statistics": {"status": "passed", "detail": "Identificadores ausentes comprometem a unidade observacional e devem bloquear a promoção; nenhuma inferência estatística foi executada."},
+    "requirements": {"status": "passed", "detail": "O gate de identidade da ocorrência foi confirmado em integração contínua; a próxima tarefa autorizada é promover uma fonte pública real da PRF pelo pipeline reproduzível."},
+    "architecture": {"status": "passed", "detail": "Ingestão e qualidade permanecem separadas; a promoção de dados reais deve preservar hash da fonte e relatório auditável antes da camada analítica."},
+    "data_engineering": {"status": "passed", "detail": "O CI bcbec86 concluiu com sucesso, confirmando validações de esquema, IDs, datas e contagens antes da promoção."},
+    "statistics": {"status": "passed", "detail": "Nenhuma inferência foi executada; análises estatísticas permanecem condicionadas à aprovação de um conjunto real pelo gate."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
     "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos dados reais."},
-    "qa": {"status": "pending", "detail": "O CI de cece82e, que cobre contagens fracionárias, foi confirmado com sucesso. A validação de ID ausente foi adicionada em fbb8ea5 e bcbec86; o novo CI está na fila/em execução."},
-    "security": {"status": "passed", "detail": "Somente DatalabMp/brazil-road-safety e DatalabMp/datalab-controller foram alterados; nenhum segredo, billing, membro ou recurso fora do escopo foi acessado."},
-    "reviewer": {"status": "passed", "detail": "A revisão confirmou que ausência do identificador impede garantir a identidade da ocorrência e deve reprovar o conjunto."},
-    "executor": {"status": "passed", "detail": "A regra para ID ausente e seu teste foram aplicados com commits em português; a promoção aguarda integração contínua verde."}
+    "qa": {"status": "passed", "detail": "Integração contínua run 25 do commit bcbec86 concluída com sucesso em 27/09/2026; o gate de identificadores ausentes está validado."},
+    "security": {"status": "passed", "detail": "Somente recursos de DatalabMp foram inspecionados/atualizados; nenhum segredo, billing, membro ou recurso fora do escopo foi acessado."},
+    "reviewer": {"status": "passed", "detail": "A revisão independente aceita a promoção do gate de qualidade e mantém estatística/modelagem bloqueadas até dados reais aprovados."},
+    "executor": {"status": "passed", "detail": "O estado operacional foi promovido após evidência objetiva de CI verde; nenhuma alteração artificial foi criada no projeto."}
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "quality_missing_id_ci_pending",
-      "progress_percent": 24,
-      "blocker": "A validação de contagens inteiras está verde. A nova validação de identificadores ausentes aguarda CI antes da promoção para dados reais."
+      "status": "quality_gate_validated_ready_for_real_data",
+      "progress_percent": 26,
+      "blocker": "Nenhum bloqueio de CI no gate atual. Próxima etapa: ingerir uma fonte pública real da PRF, registrar SHA-256 e executar o relatório de qualidade antes de liberar estatísticas."
     }
   },
   "providers": [],
@@ -49,6 +49,8 @@
     {"timestamp": "2026-09-27T06:14:01-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
     {"timestamp": "2026-09-27T06:14:01-03:00", "type": "quality_integer_counts", "detail": "O CI do commit b72946f foi confirmado verde. O gate passou a reprovar contagens fracionárias, pois mortos, feridos, ilesos, ignorados e veículos são quantidades discretas. Commits b14777f e cece82e; novo CI pendente. Custo externo de IA/API: USD 0,00."},
     {"timestamp": "2026-09-27T07:14:50-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T07:14:50-03:00", "type": "quality_missing_id", "detail": "O CI do commit cece82e foi confirmado verde. O gate passou a reprovar ocorrências sem identificador, preservando rastreabilidade e unicidade da unidade observacional. Commits fbb8ea5 e bcbec86; novo CI pendente. Custo externo de IA/API: USD 0,00."}
+    {"timestamp": "2026-09-27T07:14:50-03:00", "type": "quality_missing_id", "detail": "O CI do commit cece82e foi confirmado verde. O gate passou a reprovar ocorrências sem identificador, preservando rastreabilidade e unicidade da unidade observacional. Commits fbb8ea5 e bcbec86; novo CI pendente. Custo externo de IA/API: USD 0,00."},
+    {"timestamp": "2026-09-27T10:16:36-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-27T10:16:36-03:00", "type": "quality_gate_promoted", "detail": "A integração contínua run 25 do commit bcbec86 foi confirmada com sucesso. O gate de qualidade está validado e o projeto está autorizado a avançar para ingestão de dados públicos reais da PRF, ainda sem liberar estatística/modelagem. Custo externo de IA/API: USD 0,00."}
   ]
 }
