@@ -10,30 +10,30 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-27T03:15:18-03:00"
+    "updated_at": "2026-09-27T05:13:03-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 2,
-  "commits_today": 4,
+  "tasks_today": 3,
+  "commits_today": 7,
   "failures_today": 2,
   "agents": {
-    "requirements": {"status": "passed", "detail": "A correção preserva o contrato de ingestão e não altera requisitos analíticos."},
-    "architecture": {"status": "passed", "detail": "A alteração permanece restrita ao teste de ingestão e não modifica a arquitetura raw → processed → outputs."},
-    "data_engineering": {"status": "passed", "detail": "A lógica de ingestão reproduzível permanece inalterada; somente a separação dos imports do teste foi corrigida conforme diagnóstico exato do Ruff."},
-    "statistics": {"status": "passed", "detail": "Nenhuma inferência estatística foi liberada antes da validação da ingestão sobre dados reais."},
+    "requirements": {"status": "passed", "detail": "O contrato exige validar variáveis numéricas quanto a valores impossíveis ou fora de domínio antes de liberar resultados estatísticos."},
+    "architecture": {"status": "passed", "detail": "O reforço permanece encapsulado no gate de qualidade e preserva a arquitetura raw → processed → outputs."},
+    "data_engineering": {"status": "passed", "detail": "O gate agora identifica valores textuais inválidos em colunas de contagem, além de valores negativos, evitando coerção silenciosa para ausente."},
+    "statistics": {"status": "passed", "detail": "Nenhuma inferência estatística foi liberada; contagens inválidas passam a bloquear explicitamente a promoção dos dados."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
     "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos gates anteriores."},
-    "qa": {"status": "pending", "detail": "O CI do commit 375ebeab falhou no Ruff I001; o log indicou explicitamente uma linha em branco entre pytest e o import local. A correção foi aplicada no commit c933f16 e aguarda novo CI."},
+    "qa": {"status": "pending", "detail": "O CI do commit c933f16 concluiu com sucesso. Foram adicionados validação e teste para contagens não numéricas nos commits 029ac50 e b72946f; o novo CI ainda não estava registrado no encerramento desta iteração."},
     "security": {"status": "passed", "detail": "Somente DatalabMp/brazil-road-safety e DatalabMp/datalab-controller foram alterados; nenhum segredo, billing, membro ou recurso fora do escopo foi acessado."},
-    "reviewer": {"status": "passed", "detail": "A revisão confirmou que a correção reproduz exatamente a sugestão automática do Ruff e não altera comportamento funcional."},
-    "executor": {"status": "passed", "detail": "A separação correta dos imports foi aplicada com commit em português; a promoção do gate aguarda integração contínua verde."}
+    "reviewer": {"status": "passed", "detail": "A revisão confirmou que a nova regra fecha uma lacuna do contrato de dados sem criar afirmações estatísticas nem alterar a ingestão bruta."},
+    "executor": {"status": "passed", "detail": "A validação de contagens não numéricas e seu teste automatizado foram aplicados com commits em português; a promoção aguarda integração contínua verde."}
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "ingestion_ci_pending",
-      "progress_percent": 18,
-      "blocker": "O CI do commit 375ebeab falhou no Ruff I001. A correção exata foi aplicada em c933f16; análise estatística continua bloqueada até resultado verde."
+      "status": "quality_hardening_ci_pending",
+      "progress_percent": 20,
+      "blocker": "O CI anterior está verde. O reforço do gate para contagens não numéricas aguarda execução do novo CI antes da promoção para validação sobre dados reais."
     }
   },
   "providers": [],
@@ -43,6 +43,8 @@
     {"timestamp": "2026-09-27T01:18:00-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
     {"timestamp": "2026-09-27T01:18:00-03:00", "type": "ingestion_ci_fix", "detail": "A integração contínua anterior ainda falhava no Ruff porque faltava uma linha em branco entre imports de terceiros e do pacote local em tests/test_ingestao.py. A correção mínima foi aplicada no commit ff96e7b e um novo CI foi disparado. Custo externo de IA/API: USD 0,00."},
     {"timestamp": "2026-09-27T03:15:18-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T03:15:18-03:00", "type": "ingestion_ci_fix", "detail": "O CI do commit 375ebeab falhou novamente no Ruff I001. O log forneceu a correção exata: inserir uma linha em branco entre `import pytest` e o import local `brazil_road_safety`. A alteração foi aplicada no commit c933f16. Custo externo de IA/API: USD 0,00."}
+    {"timestamp": "2026-09-27T03:15:18-03:00", "type": "ingestion_ci_fix", "detail": "O CI do commit 375ebeab falhou novamente no Ruff I001. O log forneceu a correção exata: inserir uma linha em branco entre `import pytest` e o import local `brazil_road_safety`. A alteração foi aplicada no commit c933f16. Custo externo de IA/API: USD 0,00."},
+    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "quality_gate_hardening", "detail": "O CI do commit c933f16 foi confirmado verde. O gate de qualidade foi reforçado para reprovar valores não numéricos em colunas de contagem, com teste automatizado dedicado. Commits 029ac50 e b72946f; novo CI pendente. Custo externo de IA/API: USD 0,00."}
   ]
 }
