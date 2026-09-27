@@ -10,30 +10,30 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-27T05:13:03-03:00"
+    "updated_at": "2026-09-27T06:14:01-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 3,
-  "commits_today": 7,
+  "tasks_today": 4,
+  "commits_today": 10,
   "failures_today": 2,
   "agents": {
-    "requirements": {"status": "passed", "detail": "O contrato exige validar variáveis numéricas quanto a valores impossíveis ou fora de domínio antes de liberar resultados estatísticos."},
-    "architecture": {"status": "passed", "detail": "O reforço permanece encapsulado no gate de qualidade e preserva a arquitetura raw → processed → outputs."},
-    "data_engineering": {"status": "passed", "detail": "O gate agora identifica valores textuais inválidos em colunas de contagem, além de valores negativos, evitando coerção silenciosa para ausente."},
-    "statistics": {"status": "passed", "detail": "Nenhuma inferência estatística foi liberada; contagens inválidas passam a bloquear explicitamente a promoção dos dados."},
+    "requirements": {"status": "passed", "detail": "Variáveis de contagem representam quantidades discretas e devem aceitar somente valores numéricos inteiros não negativos antes da análise."},
+    "architecture": {"status": "passed", "detail": "A nova regra permanece encapsulada no gate de qualidade, sem alterar ingestão bruta nem liberar etapas posteriores."},
+    "data_engineering": {"status": "passed", "detail": "O gate agora detecta valores não numéricos, negativos e fracionários nas colunas de contagem."},
+    "statistics": {"status": "passed", "detail": "A restrição de integralidade é coerente com variáveis de contagem; nenhuma inferência estatística foi executada."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
-    "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos gates anteriores."},
-    "qa": {"status": "pending", "detail": "O CI do commit c933f16 concluiu com sucesso. Foram adicionados validação e teste para contagens não numéricas nos commits 029ac50 e b72946f; o novo CI ainda não estava registrado no encerramento desta iteração."},
+    "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos dados reais."},
+    "qa": {"status": "pending", "detail": "O CI dos commits 029ac50 e b72946f foi confirmado com sucesso. A validação de integralidade foi adicionada nos commits b14777f e cece82e, com teste dedicado; o novo CI ainda não estava registrado no encerramento desta iteração."},
     "security": {"status": "passed", "detail": "Somente DatalabMp/brazil-road-safety e DatalabMp/datalab-controller foram alterados; nenhum segredo, billing, membro ou recurso fora do escopo foi acessado."},
-    "reviewer": {"status": "passed", "detail": "A revisão confirmou que a nova regra fecha uma lacuna do contrato de dados sem criar afirmações estatísticas nem alterar a ingestão bruta."},
-    "executor": {"status": "passed", "detail": "A validação de contagens não numéricas e seu teste automatizado foram aplicados com commits em português; a promoção aguarda integração contínua verde."}
+    "reviewer": {"status": "passed", "detail": "A revisão confirmou que valores fracionários são inválidos para variáveis de contagem e devem bloquear a promoção dos dados."},
+    "executor": {"status": "passed", "detail": "A regra de integralidade e seu teste automatizado foram aplicados com commits em português; a promoção aguarda integração contínua verde."}
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "quality_hardening_ci_pending",
-      "progress_percent": 20,
-      "blocker": "O CI anterior está verde. O reforço do gate para contagens não numéricas aguarda execução do novo CI antes da promoção para validação sobre dados reais."
+      "status": "quality_integer_counts_ci_pending",
+      "progress_percent": 22,
+      "blocker": "O reforço anterior do gate está verde. A nova validação de contagens inteiras aguarda execução do CI antes da promoção para validação sobre dados reais."
     }
   },
   "providers": [],
@@ -45,6 +45,8 @@
     {"timestamp": "2026-09-27T03:15:18-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
     {"timestamp": "2026-09-27T03:15:18-03:00", "type": "ingestion_ci_fix", "detail": "O CI do commit 375ebeab falhou novamente no Ruff I001. O log forneceu a correção exata: inserir uma linha em branco entre `import pytest` e o import local `brazil_road_safety`. A alteração foi aplicada no commit c933f16. Custo externo de IA/API: USD 0,00."},
     {"timestamp": "2026-09-27T05:13:03-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "quality_gate_hardening", "detail": "O CI do commit c933f16 foi confirmado verde. O gate de qualidade foi reforçado para reprovar valores não numéricos em colunas de contagem, com teste automatizado dedicado. Commits 029ac50 e b72946f; novo CI pendente. Custo externo de IA/API: USD 0,00."}
+    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "quality_gate_hardening", "detail": "O CI do commit c933f16 foi confirmado verde. O gate de qualidade foi reforçado para reprovar valores não numéricos em colunas de contagem, com teste automatizado dedicado. Commits 029ac50 e b72946f; novo CI pendente. Custo externo de IA/API: USD 0,00."},
+    {"timestamp": "2026-09-27T06:14:01-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-27T06:14:01-03:00", "type": "quality_integer_counts", "detail": "O CI do commit b72946f foi confirmado verde. O gate passou a reprovar contagens fracionárias, pois mortos, feridos, ilesos, ignorados e veículos são quantidades discretas. Commits b14777f e cece82e; novo CI pendente. Custo externo de IA/API: USD 0,00."}
   ]
 }
