@@ -10,30 +10,30 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-28T14:19:29-03:00"
+    "updated_at": "2026-09-28T18:19:57-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
   "tasks_today": 2,
-  "commits_today": 4,
-  "failures_today": 2,
+  "commits_today": 5,
+  "failures_today": 3,
   "agents": {
     "requirements": {"status": "passed", "detail": "A tarefa mantém o escopo de ingestão reproduzível da fonte oficial da PRF e evita avançar para inferências antes da validação dos dados reais."},
     "architecture": {"status": "passed", "detail": "A compatibilidade de codificação permanece isolada na camada de ingestão, sem misturar regras estatísticas ou de visualização."},
-    "data_engineering": {"status": "passed", "detail": "A ingestão com UTF-8/BOM e fallback para latin1 foi validada pela integração contínua; a codificação efetivamente usada permanece registrada no resultado auditável."},
+    "data_engineering": {"status": "passed", "detail": "A página oficial da PRF foi verificada novamente e continua apontando o conjunto 2025 agrupado por ocorrência para o mesmo identificador público do Google Drive registrado no projeto."},
     "statistics": {"status": "passed", "detail": "Nenhuma inferência foi executada; estatística continua bloqueada até o artefato oficial ser baixado, identificado por SHA-256 e aprovado pelo gate de qualidade."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
     "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos dados reais."},
     "qa": {"status": "passed", "detail": "As execuções 30 e 31 da integração contínua concluíram com sucesso para os commits 728b455 e b9ce0c9, validando a ingestão e os testes de UTF-8 e latin1."},
     "security": {"status": "passed", "detail": "Somente recursos públicos e repositórios DatalabMp foram usados; nenhum segredo, billing, membro ou recurso externo pago foi alterado."},
-    "reviewer": {"status": "passed", "detail": "A revisão independente mantém aprovado o fallback explícito de codificação e o registro do encoding; o conjunto real não é considerado ingerido sem artefato oficial e SHA-256."},
-    "executor": {"status": "passed", "detail": "O executor atualizou somente o estado operacional após confirmação objetiva do CI; nenhuma alteração artificial foi aplicada ao projeto."}
+    "reviewer": {"status": "passed", "detail": "A revisão independente confirmou a identidade da fonte pela página institucional da PRF; o conjunto real continua não ingerido sem download e SHA-256."},
+    "executor": {"status": "passed", "detail": "O executor atualizou somente o estado operacional do controlador; nenhuma alteração foi aplicada ao projeto sem o artefato oficial disponível."}
   },
   "project_progress": {
     "brazil-road-safety": {
       "status": "ingestion_encoding_validated_waiting_official_download",
       "progress_percent": 32,
-      "blocker": "A integração contínua da camada de ingestão está verde. O download do artefato oficial datatran2025.zip continua indisponível no ambiente nesta iteração; nenhuma cópia de terceiros foi usada. Próxima etapa: repetir o download oficial, registrar SHA-256 e executar o gate de qualidade sobre os dados reais."
+      "blocker": "A fonte oficial foi revalidada em 28/09/2026: a página institucional da PRF continua apontando o conjunto 2025 agrupado por ocorrência para o arquivo datatran2025.zip no Google Drive, com o mesmo identificador registrado no projeto. O ambiente desta iteração não conseguiu materializar o ZIP; nenhuma cópia de terceiros foi usada. Próxima etapa: baixar o artefato oficial, registrar SHA-256 e executar o gate de qualidade sobre os dados reais."
     }
   },
   "providers": [],
@@ -47,6 +47,9 @@
     {"timestamp": "2026-09-28T14:19:29-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
     {"timestamp": "2026-09-28T14:19:29-03:00", "type": "ci_confirmed", "detail": "As execuções 30 e 31 da integração contínua dos commits 728b455 e b9ce0c9 foram confirmadas com sucesso."},
     {"timestamp": "2026-09-28T14:19:29-03:00", "type": "real_download_retry_blocked", "detail": "Nova tentativa de acesso ao artefato oficial via endpoint publicado permaneceu indisponível no ambiente. Não foi usado espelho de terceiros e nenhuma análise de dados reais foi liberada."},
-    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "quality_gate_update", "detail": "QA da compatibilidade de codificação promovido para aprovado após CI verde. Projeto em 32%; custo externo de IA/API confirmado em USD 0,00."}
+    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "quality_gate_update", "detail": "QA da compatibilidade de codificação promovido para aprovado após CI verde. Projeto em 32%; custo externo de IA/API confirmado em USD 0,00."},
+    {"timestamp": "2026-09-28T18:19:57-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-28T18:19:57-03:00", "type": "official_source_revalidated", "detail": "A página oficial da PRF, modificada em 28/07/2026, continua publicando o Documento CSV de Acidentes 2025 agrupado por ocorrência e aponta para o mesmo arquivo datatran2025.zip no Google Drive registrado pelo projeto."},
+    {"timestamp": "2026-09-28T18:19:57-03:00", "type": "real_download_environment_blocked", "detail": "A tentativa de materializar o ZIP oficial a partir do identificador público do Google Drive foi bloqueada pelas restrições de acesso do ambiente. Nenhum espelho foi usado, nenhum SHA-256 foi fabricado e o gate estatístico permanece fechado. Custo externo de IA/API: USD 0,00."}
   ]
 }
