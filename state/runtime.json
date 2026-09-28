@@ -1,58 +1,48 @@
 {
   "version": 1,
-  "date": "2026-09-27",
+  "date": "2026-09-28",
   "daily_plan": {
-    "date": "2026-09-27",
+    "date": "2026-09-28",
     "target_slots": 11,
-    "hours": [1, 2, 3, 5, 6, 7, 10, 12, 15, 16, 20]
+    "hours": [0, 3, 5, 6, 7, 8, 10, 14, 15, 18, 23]
   },
   "operator_control": {
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-27T16:17:30-03:00"
+    "updated_at": "2026-09-28T07:14:38-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 7,
-  "commits_today": 16,
-  "failures_today": 2,
+  "tasks_today": 1,
+  "commits_today": 3,
+  "failures_today": 1,
   "agents": {
-    "requirements": {"status": "passed", "detail": "A tarefa preserva o escopo autorizado: preparar a ingestão do conjunto oficial de acidentes de 2025 agrupados por ocorrência, sem antecipar inferências."},
-    "architecture": {"status": "passed", "detail": "A identidade da fonte foi isolada em registro próprio, mantendo separadas descoberta da fonte, ingestão, qualidade e análise."},
-    "data_engineering": {"status": "passed", "detail": "A página oficial da PRF foi verificada e o identificador do arquivo datatran2025.zip foi registrado de forma reproduzível para a próxima execução de ingestão."},
-    "statistics": {"status": "passed", "detail": "Nenhuma inferência foi executada; estatística permanece bloqueada até download, hash SHA-256 e aprovação do conjunto real pelo gate."},
+    "requirements": {"status": "passed", "detail": "A tarefa mantém o escopo de ingestão reproduzível da fonte oficial da PRF e evita avançar para inferências antes da validação dos dados reais."},
+    "architecture": {"status": "passed", "detail": "A compatibilidade de codificação foi implementada na camada de ingestão, sem misturar regras estatísticas ou de visualização."},
+    "data_engineering": {"status": "passed", "detail": "A ingestão agora tenta UTF-8 com BOM e, em caso de erro de decodificação, latin1; a codificação efetivamente usada é registrada no resultado auditável."},
+    "statistics": {"status": "passed", "detail": "Nenhuma inferência foi executada; estatística continua bloqueada até o artefato oficial ser baixado, identificado por SHA-256 e aprovado pelo gate de qualidade."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
     "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos dados reais."},
-    "qa": {"status": "pending", "detail": "Teste automatizado da identidade da fonte foi adicionado; integração contínua run 27 está na fila e ainda não foi promovida."},
-    "security": {"status": "passed", "detail": "Somente recursos públicos da PRF e repositórios DatalabMp foram usados; nenhum segredo, billing, membro ou recurso fora do escopo foi alterado."},
-    "reviewer": {"status": "passed", "detail": "A revisão independente aprovou o registro da fonte como etapa preparatória; não considera o conjunto ingerido enquanto o artefato real e seu hash não forem obtidos."},
-    "executor": {"status": "passed", "detail": "Foram criados somente o registro auditável da fonte e seu teste, com commits significativos em português."}
+    "qa": {"status": "pending", "detail": "Testes locais dedicados às codificações UTF-8 e latin1 passaram; o CI dos commits 728b455 e b9ce0c9 ainda precisa ser confirmado."},
+    "security": {"status": "passed", "detail": "Somente recursos públicos e repositórios DatalabMp foram usados; nenhum segredo, billing, membro ou recurso externo pago foi alterado."},
+    "reviewer": {"status": "passed", "detail": "A revisão independente aprovou o fallback explícito de codificação e o registro do encoding, sem considerar o conjunto real como ingerido."},
+    "executor": {"status": "passed", "detail": "O executor aplicou somente alterações aprovadas, com commits significativos em português e testes específicos."}
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "official_source_registered_pending_ci",
-      "progress_percent": 28,
-      "blocker": "A fonte oficial de 2025 foi identificada e registrada. Próxima etapa: confirmar CI verde, baixar o artefato real, registrar SHA-256 e executar o relatório de qualidade antes de liberar estatísticas."
+      "status": "ingestion_encoding_hardened_pending_ci_and_real_download",
+      "progress_percent": 30,
+      "blocker": "O download direto do artefato oficial falhou nesta execução por indisponibilidade transitória de resolução de rede no ambiente. Não foi usado espelho de terceiros. Próxima etapa: confirmar CI verde, repetir o download oficial, registrar SHA-256 e executar o gate de qualidade."
     }
   },
   "providers": [],
   "external_ai_cost_usd": 0.0,
   "recent_events": [
-    {"timestamp": "2026-09-27T01:18:00-03:00", "type": "daily_plan_initialized", "detail": "Plano diário criado com 11 horários de trabalho significativo para 27/09/2026; a hora 01 está ativa."},
-    {"timestamp": "2026-09-27T01:18:00-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T01:18:00-03:00", "type": "ingestion_ci_fix", "detail": "A integração contínua anterior ainda falhava no Ruff porque faltava uma linha em branco entre imports de terceiros e do pacote local em tests/test_ingestao.py. A correção mínima foi aplicada no commit ff96e7b e um novo CI foi disparado. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T03:15:18-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T03:15:18-03:00", "type": "ingestion_ci_fix", "detail": "O CI do commit 375ebeab falhou novamente no Ruff I001. O log forneceu a correção exata: inserir uma linha em branco entre `import pytest` e o import local `brazil_road_safety`. A alteração foi aplicada no commit c933f16. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T05:13:03-03:00", "type": "quality_gate_hardening", "detail": "O CI do commit c933f16 foi confirmado verde. O gate de qualidade foi reforçado para reprovar valores não numéricos em colunas de contagem, com teste automatizado dedicado. Commits 029ac50 e b72946f; novo CI pendente. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T06:14:01-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T06:14:01-03:00", "type": "quality_integer_counts", "detail": "O CI do commit b72946f foi confirmado verde. O gate passou a reprovar contagens fracionárias, pois mortos, feridos, ilesos, ignorados e veículos são quantidades discretas. Commits b14777f e cece82e; novo CI pendente. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T07:14:50-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T07:14:50-03:00", "type": "quality_missing_id", "detail": "O CI do commit cece82e foi confirmado verde. O gate passou a reprovar ocorrências sem identificador, preservando rastreabilidade e unicidade da unidade observacional. Commits fbb8ea5 e bcbec86; novo CI pendente. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T10:16:36-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T10:16:36-03:00", "type": "quality_gate_promoted", "detail": "A integração contínua run 25 do commit bcbec86 foi confirmada com sucesso. O gate de qualidade está validado e o projeto está autorizado a avançar para ingestão de dados públicos reais da PRF, ainda sem liberar estatística/modelagem. Custo externo de IA/API: USD 0,00."},
-    {"timestamp": "2026-09-27T16:17:30-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
-    {"timestamp": "2026-09-27T16:17:30-03:00", "type": "official_source_registered", "detail": "A página oficial da PRF foi verificada e o arquivo datatran2025.zip, acidentes de 2025 agrupados por ocorrência, foi registrado com seu identificador público do Google Drive. Commits 27cd7ff e eb79793; CI run 27 pendente. O artefato ainda não foi promovido como ingerido nem validado. Custo externo de IA/API: USD 0,00."}
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "daily_plan_initialized", "detail": "Plano diário criado com 11 horários de trabalho significativo para 28/09/2026; a hora 07 está ativa."},
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "ci_confirmed", "detail": "A integração contínua run 29 do commit a80010c foi confirmada com sucesso."},
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "real_download_transient_failure", "detail": "A tentativa de baixar o artefato oficial datatran2025.zip falhou por erro transitório de resolução de rede no ambiente. Nenhum espelho de terceiros foi promovido como fonte."},
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "ingestion_encoding_hardening", "detail": "A ingestão passou a suportar fallback auditável de UTF-8 para latin1 e registra a codificação usada. Teste local confirmou preservação de acentos nas duas codificações. Commits 728b455 e b9ce0c9; CI pendente. Custo externo de IA/API: USD 0,00."}
   ]
 }
