@@ -10,30 +10,30 @@
     "mode": "normal",
     "directive": null,
     "issue_number": null,
-    "updated_at": "2026-09-28T07:14:38-03:00"
+    "updated_at": "2026-09-28T14:19:29-03:00"
   },
   "active_project": "brazil-road-safety",
   "last_project_started_at": "2026-09-26T13:45:54.500567+00:00",
-  "tasks_today": 1,
-  "commits_today": 3,
-  "failures_today": 1,
+  "tasks_today": 2,
+  "commits_today": 4,
+  "failures_today": 2,
   "agents": {
     "requirements": {"status": "passed", "detail": "A tarefa mantém o escopo de ingestão reproduzível da fonte oficial da PRF e evita avançar para inferências antes da validação dos dados reais."},
-    "architecture": {"status": "passed", "detail": "A compatibilidade de codificação foi implementada na camada de ingestão, sem misturar regras estatísticas ou de visualização."},
-    "data_engineering": {"status": "passed", "detail": "A ingestão agora tenta UTF-8 com BOM e, em caso de erro de decodificação, latin1; a codificação efetivamente usada é registrada no resultado auditável."},
+    "architecture": {"status": "passed", "detail": "A compatibilidade de codificação permanece isolada na camada de ingestão, sem misturar regras estatísticas ou de visualização."},
+    "data_engineering": {"status": "passed", "detail": "A ingestão com UTF-8/BOM e fallback para latin1 foi validada pela integração contínua; a codificação efetivamente usada permanece registrada no resultado auditável."},
     "statistics": {"status": "passed", "detail": "Nenhuma inferência foi executada; estatística continua bloqueada até o artefato oficial ser baixado, identificado por SHA-256 e aprovado pelo gate de qualidade."},
     "modeling": {"status": "not_applicable", "detail": "Modelagem permanece bloqueada até validação dos dados reais."},
     "visualization": {"status": "not_applicable", "detail": "Visualizações analíticas permanecem bloqueadas até aprovação dos dados reais."},
-    "qa": {"status": "pending", "detail": "Testes locais dedicados às codificações UTF-8 e latin1 passaram; o CI dos commits 728b455 e b9ce0c9 ainda precisa ser confirmado."},
+    "qa": {"status": "passed", "detail": "As execuções 30 e 31 da integração contínua concluíram com sucesso para os commits 728b455 e b9ce0c9, validando a ingestão e os testes de UTF-8 e latin1."},
     "security": {"status": "passed", "detail": "Somente recursos públicos e repositórios DatalabMp foram usados; nenhum segredo, billing, membro ou recurso externo pago foi alterado."},
-    "reviewer": {"status": "passed", "detail": "A revisão independente aprovou o fallback explícito de codificação e o registro do encoding, sem considerar o conjunto real como ingerido."},
-    "executor": {"status": "passed", "detail": "O executor aplicou somente alterações aprovadas, com commits significativos em português e testes específicos."}
+    "reviewer": {"status": "passed", "detail": "A revisão independente mantém aprovado o fallback explícito de codificação e o registro do encoding; o conjunto real não é considerado ingerido sem artefato oficial e SHA-256."},
+    "executor": {"status": "passed", "detail": "O executor atualizou somente o estado operacional após confirmação objetiva do CI; nenhuma alteração artificial foi aplicada ao projeto."}
   },
   "project_progress": {
     "brazil-road-safety": {
-      "status": "ingestion_encoding_hardened_pending_ci_and_real_download",
-      "progress_percent": 30,
-      "blocker": "O download direto do artefato oficial falhou nesta execução por indisponibilidade transitória de resolução de rede no ambiente. Não foi usado espelho de terceiros. Próxima etapa: confirmar CI verde, repetir o download oficial, registrar SHA-256 e executar o gate de qualidade."
+      "status": "ingestion_encoding_validated_waiting_official_download",
+      "progress_percent": 32,
+      "blocker": "A integração contínua da camada de ingestão está verde. O download do artefato oficial datatran2025.zip continua indisponível no ambiente nesta iteração; nenhuma cópia de terceiros foi usada. Próxima etapa: repetir o download oficial, registrar SHA-256 e executar o gate de qualidade sobre os dados reais."
     }
   },
   "providers": [],
@@ -43,6 +43,10 @@
     {"timestamp": "2026-09-28T07:14:38-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
     {"timestamp": "2026-09-28T07:14:38-03:00", "type": "ci_confirmed", "detail": "A integração contínua run 29 do commit a80010c foi confirmada com sucesso."},
     {"timestamp": "2026-09-28T07:14:38-03:00", "type": "real_download_transient_failure", "detail": "A tentativa de baixar o artefato oficial datatran2025.zip falhou por erro transitório de resolução de rede no ambiente. Nenhum espelho de terceiros foi promovido como fonte."},
-    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "ingestion_encoding_hardening", "detail": "A ingestão passou a suportar fallback auditável de UTF-8 para latin1 e registra a codificação usada. Teste local confirmou preservação de acentos nas duas codificações. Commits 728b455 e b9ce0c9; CI pendente. Custo externo de IA/API: USD 0,00."}
+    {"timestamp": "2026-09-28T07:14:38-03:00", "type": "ingestion_encoding_hardening", "detail": "A ingestão passou a suportar fallback auditável de UTF-8 para latin1 e registra a codificação usada. Teste local confirmou preservação de acentos nas duas codificações. Commits 728b455 e b9ce0c9; CI pendente. Custo externo de IA/API: USD 0,00."},
+    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "control_check", "detail": "Nenhuma diretiva [control] aberta foi encontrada; o modo do operador permanece normal."},
+    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "ci_confirmed", "detail": "As execuções 30 e 31 da integração contínua dos commits 728b455 e b9ce0c9 foram confirmadas com sucesso."},
+    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "real_download_retry_blocked", "detail": "Nova tentativa de acesso ao artefato oficial via endpoint publicado permaneceu indisponível no ambiente. Não foi usado espelho de terceiros e nenhuma análise de dados reais foi liberada."},
+    {"timestamp": "2026-09-28T14:19:29-03:00", "type": "quality_gate_update", "detail": "QA da compatibilidade de codificação promovido para aprovado após CI verde. Projeto em 32%; custo externo de IA/API confirmado em USD 0,00."}
   ]
 }
