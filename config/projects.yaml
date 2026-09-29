@@ -8,7 +8,7 @@ projects:
 - slug: brazil-economic-monitor
   title: Monitor Econômico do Brasil
   source: Banco Central do Brasil
-  status: queued
+  status: active
   priority: 2
   dashboard: github-pages
 - slug: enem-analytics
