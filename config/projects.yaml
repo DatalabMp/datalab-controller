@@ -14,7 +14,7 @@ projects:
 - slug: enem-analytics
   title: Análise do ENEM
   source: INEP
-  status: queued
+  status: active
   priority: 3
   dashboard: github-pages
 - slug: brazil-labor-observatory
