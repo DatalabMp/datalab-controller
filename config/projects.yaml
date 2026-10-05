@@ -20,7 +20,7 @@ projects:
 - slug: brazil-labor-observatory
   title: Observatório de População e Trabalho do Brasil
   source: IBGE
-  status: queued
+  status: active
   priority: 4
   dashboard: github-pages
 - slug: sus-health-analytics

@@ -25,8 +25,8 @@
     "issue_number": null,
     "updated_at": "2026-09-29T02:15:58-03:00"
   },
-  "active_project": "enem-analytics",
-  "last_project_started_at": "2026-10-02T18:31:24.868541+00:00",
+  "active_project": "brazil-labor-observatory",
+  "last_project_started_at": "2026-10-05T22:44:56.968235+00:00",
   "tasks_today": 1,
   "commits_today": 2,
   "failures_today": 0,
@@ -87,6 +87,11 @@
       "status": "initialized",
       "progress_percent": 5,
       "blocker": null
+    },
+    "brazil-labor-observatory": {
+      "status": "initialized",
+      "progress_percent": 5,
+      "blocker": null
     }
   },
   "providers": [],
@@ -131,6 +136,11 @@
       "timestamp": "2026-10-02T18:31:24.868541+00:00",
       "type": "project_initialized",
       "detail": "Repositório público gerenciado DatalabMp/enem-analytics criado; estrutura inicial e controles de qualidade configurados. Custo externo de IA/API: USD 0,00."
+    },
+    {
+      "timestamp": "2026-10-05T22:44:56.968235+00:00",
+      "type": "project_initialized",
+      "detail": "Repositório público gerenciado DatalabMp/brazil-labor-observatory criado; estrutura inicial e controles de qualidade configurados. Custo externo de IA/API: USD 0,00."
     }
   ]
 }
