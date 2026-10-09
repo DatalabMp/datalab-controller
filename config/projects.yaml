@@ -26,7 +26,7 @@ projects:
 - slug: sus-health-analytics
   title: Análise de Saúde do SUS
   source: DATASUS
-  status: queued
+  status: active
   priority: 5
   dashboard: github-pages
 - slug: brazil-agriculture-analytics
