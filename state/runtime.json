@@ -25,8 +25,8 @@
     "issue_number": null,
     "updated_at": "2026-09-29T02:15:58-03:00"
   },
-  "active_project": "sus-health-analytics",
-  "last_project_started_at": "2026-10-09T02:16:57.083900+00:00",
+  "active_project": "brazil-agriculture-analytics",
+  "last_project_started_at": "2026-10-12T06:09:51.406370+00:00",
   "tasks_today": 1,
   "commits_today": 2,
   "failures_today": 0,
@@ -97,6 +97,11 @@
       "status": "initialized",
       "progress_percent": 5,
       "blocker": null
+    },
+    "brazil-agriculture-analytics": {
+      "status": "initialized",
+      "progress_percent": 5,
+      "blocker": null
     }
   },
   "providers": [],
@@ -151,6 +156,11 @@
       "timestamp": "2026-10-09T02:16:57.083900+00:00",
       "type": "project_initialized",
       "detail": "Repositório público gerenciado DatalabMp/sus-health-analytics criado; estrutura inicial e controles de qualidade configurados. Custo externo de IA/API: USD 0,00."
+    },
+    {
+      "timestamp": "2026-10-12T06:09:51.406370+00:00",
+      "type": "project_initialized",
+      "detail": "Repositório público gerenciado DatalabMp/brazil-agriculture-analytics criado; estrutura inicial e controles de qualidade configurados. Custo externo de IA/API: USD 0,00."
     }
   ]
 }

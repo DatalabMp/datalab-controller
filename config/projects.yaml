@@ -32,6 +32,6 @@ projects:
 - slug: brazil-agriculture-analytics
   title: Análise da Agricultura Brasileira
   source: IBGE/PAM
-  status: queued
+  status: active
   priority: 6
   dashboard: github-pages
